@@ -1,11 +1,9 @@
 # https://github.com/settings/developers
 # https://app.netlify.com/projects/silver-trifle-482fa2/configuration/identity#content
 backend:
-  name: git-gateway
-  branch: main
-  # name: github
+  name: github
   # repo: kubek93/rapoland-events
-  # branch: main
+  branch: main
   # auth_scope: repo
 
 # backend:
