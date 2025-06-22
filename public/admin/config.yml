@@ -2,7 +2,7 @@
 # https://app.netlify.com/projects/silver-trifle-482fa2/configuration/identity#content
 backend:
   name: github
-  # repo: kubek93/rapoland-events
+  repo: kubek93/rapoland-events
   branch: main
   # auth_scope: repo
 
