@@ -1,0 +1,21 @@
+---
+// src/components/EventList.astro
+import EventCard from './EventCard.astro';
+
+const { events } = Astro.props;
+---
+
+<div class="space-y-6">
+  {events.length > 0 ? (
+    events.map((event: unknown) => <EventCard event={event} />)
+  ) : (
+    <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+      <i class="fas fa-calendar-times text-5xl text-gray-300 mb-4"></i>
+      <h3 class="text-xl font-bold text-gray-700">No upcoming events</h3>
+      <p class="text-gray-500 mt-2">Check back later for new events</p>
+      <a href="/admin/" class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-300">
+        Add New Event
+      </a>
+    </div>
+  )}
+</div>
