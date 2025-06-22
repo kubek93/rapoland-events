@@ -150,6 +150,12 @@ const formatDate = (date) => {
       height: 100%;
       border: 0;
     }
+
+    .text-gradient {
+        background: linear-gradient(90deg, #ff3e82 0%, #8e44ad 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
   </style>
 </head>
 <body class="font-sans antialiased">
@@ -193,17 +199,153 @@ const formatDate = (date) => {
 
   <!-- Main Content -->
   <main class="container mx-auto px-4 py-12">
+
+    <section class="glass-card animate-fade-in p-6 text-white py-10 rounded-xl">
+      <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+          <div class="w-full md:mb-0 text-center">
+              <h2 class="text-4xl md:text-5xl font-bold mb-4">Najświeższe <span class="text-gradient">wydarzenia muzyczne</span></h2>
+              <p class="text-lg text-gray-300">Bądź na bieżąco z koncertami, festiwalami i premierami w polskiej scenie rapowej.</p>
+              <!-- <div class="flex flex-wrap gap-3">
+                  <button class="bg-primary px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition">Zobacz nadchodzące wydarzenia</button>
+                  <button class="bg-white text-dark px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition">Zapisz się do newslettera</button>
+              </div> -->
+          </div>
+          <!-- <div class="md:w-1/2 flex justify-center">
+              <div class="relative">
+                  <div class="absolute -top-6 -left-6 w-32 h-32 bg-accent rounded-lg rotate-12"></div>
+                  <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary rounded-lg -rotate-12"></div>
+                  <div class="relative bg-gray-200 border-2 border-dashed rounded-xl w-64 h-64 md:w-80 md:h-80" />
+              </div>
+          </div> -->
+      </div>
+    </section>
+
+    <!-- Sekcja z przewijanymi aktualnościami -->
+    <section class="py-12 bg-underground street-border">
+        <div class="container mx-auto px-4">
+            <!-- <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bebas text-white underground-text"><span class="text-graffiti">ULICZNE</span> AKTUALNOŚCI</h2>
+                <a href="#" class="text-primary font-medium flex items-center">
+                    Więcej aktualności <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div> -->
+
+            <div class="flex justify-between items-center mb-8">
+            <div>
+              <h2 class="text-3xl font-heading font-bold text-white">Uliczne aktualności</h2>
+              <p class="text-blue-300 text-md mt-2">Co słychać w holenderskim świecie hip-hopu</p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <div class="text-sm bg-blue-900/30 px-4 py-2 rounded-full">
+                {events.length} {events.length === 1 ? 'wydarzenie' : 'wydarzeń'}
+              </div>
+               <a href="#" class="text-primary font-medium flex items-center">
+                  Zobacz wszystkie <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+
+            <div class="news-scroll-container flex overflow-x-auto pb-6 space-x-4">
+                <!-- News Card 1 -->
+                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
+                    <div class="h-40 bg-gradient-to-r from-purple-900 to-purple-700 relative">
+                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
+                    </div>
+                    <div class="p-5">
+                        <span class="text-sm text-primary font-medium">BITWA</span>
+                        <h3 class="text-xl font-bold my-3 text-white">Underground Freestyle Battle w Warszawie</h3>
+                        <p class="text-gray-400 mb-4">Zapisy na listopadową bitwę już otwarte. Pula nagród: 5000 zł!</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>2 godziny temu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Card 2 -->
+                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
+                    <div class="h-40 bg-gradient-to-r from-green-900 to-green-700 relative">
+                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">PREMIERA</div>
+                    </div>
+                    <div class="p-5">
+                        <span class="text-sm text-primary font-medium">ALBUM</span>
+                        <h3 class="text-xl font-bold my-3 text-white">"Ciemna strona miasta" - nowy album Łony</h3>
+                        <p class="text-gray-400 mb-4">Legendarny raper powraca z nowym materiałem inspirowanym życiem w blokowiskach.</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>Wczoraj</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Card 3 -->
+                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
+                    <div class="h-40 bg-gradient-to-r from-red-900 to-red-700 relative">
+                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">RELAX</div>
+                    </div>
+                    <div class="p-5">
+                        <span class="text-sm text-primary font-medium">WARSZTATY</span>
+                        <h3 class="text-xl font-bold my-3 text-white">Bezpłatne warsztaty beatboxu w Krakowie</h3>
+                        <p class="text-gray-400 mb-4">Chcesz nauczyć się podstaw beatboxu? Przyjdź w sobotę do klubu Underground.</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>2 dni temu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Card 4 -->
+                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
+                    <div class="h-40 bg-gradient-to-r from-blue-900 to-blue-700 relative">
+                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">KONCERT</div>
+                    </div>
+                    <div class="p-5">
+                        <span class="text-sm text-primary font-medium">IMPREZA</span>
+                        <h3 class="text-xl font-bold my-3 text-white">Oldschool hip-hop night w Łodzi</h3>
+                        <p class="text-gray-400 mb-4">Sety DJ-a Abradab i specjalny występ Peji. Bilety już w sprzedaży.</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>3 dni temu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Card 5 -->
+                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
+                    <div class="h-40 bg-gradient-to-r from-yellow-900 to-yellow-700 relative">
+                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">WYDARZENIE</div>
+                    </div>
+                    <div class="p-5">
+                        <span class="text-sm text-primary font-medium">FESTIWAL</span>
+                        <h3 class="text-xl font-bold my-3 text-white">Podziemna Scena Fest - edycja jesienna</h3>
+                        <p class="text-gray-400 mb-4">3 dni, 20 wykonawców, tylko underground. Bilety w przedsprzedaży.</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>4 dni temu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     {events.length > 0 ? (
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
         <!-- Lista wydarzeń -->
         <div class="lg:col-span-2">
           <div class="flex justify-between items-center mb-8">
             <div>
               <h2 class="text-3xl font-heading font-bold text-white">Nadchodzące Wydarzenia</h2>
-              <p class="text-blue-300 mt-2">Znajdź coś dla siebie</p>
+              <p class="text-blue-300 text-md mt-2">Gdzie się widzimy?</p>
             </div>
-            <div class="text-sm bg-blue-900/30 px-4 py-2 rounded-full">
-              {events.length} {events.length === 1 ? 'wydarzenie' : 'wydarzeń'}
+            <div class="flex items-center space-x-4">
+              <div class="text-sm bg-blue-900/30 px-4 py-2 rounded-full">
+                {events.length} {events.length === 1 ? 'wydarzenie' : 'wydarzeń'}
+              </div>
+               <a href="#" class="text-primary font-medium flex items-center">
+                  Zobacz wszystkie <i class="fas fa-arrow-right ml-2"></i>
+              </a>
             </div>
           </div>
 
@@ -293,71 +435,75 @@ const formatDate = (date) => {
 
         <!-- Panel boczny -->
         <div class="lg:col-span-1 space-y-8">
-          <!-- Kalendarz -->
-          <div class="glass-card animate-fade-in">
-            <div class="bg-blue-900/30 py-5 px-6 border-b border-blue-800">
-              <div class="flex justify-between items-center">
-                <h2 class="text-xl font-heading font-semibold">
-                  {format(new Date(), 'MMMM yyyy', { locale: pl })}
-                </h2>
-              </div>
-            </div>
-            <div class="p-4">
-              <!-- Nagłówki dni -->
-              <div class="grid grid-cols-7 gap-1 mb-4">
-                {['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb', 'Nd'].map(day => (
-                  <div class="text-center text-blue-300 font-medium py-2">{day}</div>
-                ))}
-              </div>
 
-              <!-- Dni kalendarza -->
-              <div class="grid grid-cols-7 gap-1">
-                {Array.from({ length: 42 }).map((_, i) => {
-                  const today = new Date();
-                  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-                  const startOffset = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-                  const date = new Date(today.getFullYear(), today.getMonth(), i - startOffset + 1);
-                  const isCurrentMonth = date.getMonth() === today.getMonth();
-                  const isToday = date.toDateString() === new Date().toDateString();
-                  const hasEvents = events.some(e =>
-                    e.startDate.getDate() === date.getDate() &&
-                    e.startDate.getMonth() === date.getMonth() &&
-                    e.startDate.getFullYear() === date.getFullYear()
-                  );
-
-                  return (
-                    <div
-                      class={`text-center p-2 rounded-lg cursor-pointer
-                        ${isCurrentMonth ? 'text-white' : 'text-blue-700'}
-                        ${isToday ? 'bg-blue-800' : ''}
-                        ${hasEvents ? 'border border-blue-500' : ''}
-                        hover:bg-blue-900/30`}
-                    >
-                      {date.getDate()}
-                      {hasEvents && (
-                        <div class="flex justify-center mt-1">
-                          <div class="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+            <div class="bg-gray-800 rounded-xl p-5 mb-6">
+              <h3 class="text-xl font-bold mb-4 text-white text-center">KALENDARZ</h3>
+              <div class="bg-gray-900 rounded-lg p-4">
+                  <div class="text-center mb-4">
+                      <span class="text-xl font-bold text-white">LISTOPAD 2023</span>
+                  </div>
+                  <div class="grid grid-cols-7 gap-2 mb-2">
+                      <div class="text-center text-gray-500">Pn</div>
+                      <div class="text-center text-gray-500">Wt</div>
+                      <div class="text-center text-gray-500">Śr</div>
+                      <div class="text-center text-gray-500">Cz</div>
+                      <div class="text-center text-gray-500">Pt</div>
+                      <div class="text-center text-gray-500">So</div>
+                      <div class="text-center text-gray-500">Nd</div>
+                  </div>
+                  <div class="grid grid-cols-7 gap-2">
+                      <div class="text-center py-1 text-gray-600">30</div>
+                      <div class="text-center py-1 text-gray-600">31</div>
+                      <div class="text-center py-1">1</div>
+                      <div class="text-center py-1">2</div>
+                      <div class="text-center py-1">3</div>
+                      <div class="text-center py-1">4</div>
+                      <div class="text-center py-1">5</div>
+                      <div class="text-center py-1">6</div>
+                      <div class="text-center py-1">7</div>
+                      <div class="text-center py-1">8</div>
+                      <div class="text-center py-1">9</div>
+                      <div class="text-center py-1">10</div>
+                      <div class="text-center py-1">11</div>
+                      <div class="text-center py-1">12</div>
+                      <div class="text-center py-1">13</div>
+                      <div class="text-center py-1">14</div>
+                      <div class="text-center py-1">15</div>
+                      <div class="text-center py-1 bg-primary rounded-full text-white">16</div>
+                      <div class="text-center py-1">17</div>
+                      <div class="text-center py-1">18</div>
+                      <div class="text-center py-1">19</div>
+                      <div class="text-center py-1">20</div>
+                      <div class="text-center py-1">21</div>
+                      <div class="text-center py-1 bg-accent rounded-full text-dark font-bold">22</div>
+                      <div class="text-center py-1">23</div>
+                      <div class="text-center py-1">24</div>
+                      <div class="text-center py-1">25</div>
+                      <div class="text-center py-1">26</div>
+                      <div class="text-center py-1">27</div>
+                      <div class="text-center py-1">28</div>
+                      <div class="text-center py-1">29</div>
+                      <div class="text-center py-1">30</div>
+                      <div class="text-center py-1 text-gray-600">1</div>
+                  </div>
+                  <div class="mt-4">
+                      <div class="flex items-center mb-2">
+                          <div class="w-4 h-4 bg-primary rounded-full mr-2"></div>
+                          <span class="text-sm text-gray-300">Bitwa freestyle</span>
+                      </div>
+                      <div class="flex items-center">
+                          <div class="w-4 h-4 bg-accent rounded-full mr-2"></div>
+                          <span class="text-sm text-gray-300">Koncert</span>
+                      </div>
+                  </div>
               </div>
-            </div>
-            <div class="p-2">
-              <a
-                href="/wydarzenia"
-                class="gradient-bg hover:opacity-90 text-white px-8 py-3 w-full rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl inline-flex items-center justify-center"
-              >
-                Sprawdź cały kalendarz
-              </a>
-            </div>
           </div>
 
+
           <!-- Mapa wydarzeń -->
-          {events.length > 0 && events[0].google_maps_url && (
+          {/* {events.length > 0 && events[0].google_maps_url && (
             <div class="glass-card animate-fade-in p-6">
-              <h3 class="font-heading font-semibold text-xl mb-4">Lokalizacja najbliższego wydarzenia</h3>
+              <h3 class="font-heading font-semibold text-xl mb-4">Najbliższe wydarzenie</h3>
               <div class="map-container">
                 <iframe
                   src={events[0].google_maps_url.replace('/place/', '/embed/')}
@@ -366,7 +512,23 @@ const formatDate = (date) => {
                 ></iframe>
               </div>
             </div>
-          )}
+          )} */}
+
+          <div class="bg-gray-800 rounded-xl p-5 mb-6">
+            <h3 class="text-xl font-bold mb-4 text-white text-center">NAJBLIŻSZE WYDARZENIE</h3>
+            <div class="bg-gradient-to-r from-purple-900 to-purple-700 rounded-lg p-4">
+                <div class="text-center text-white font-bold mb-2">25 LISTOPADA</div>
+                <h4 class="text-lg font-bold text-white mb-2">Underground Rap Battle</h4>
+                <p class="text-gray-300 mb-3"><i class="fas fa-map-marker-alt mr-2"></i> Klub Podziemie, Warszawa</p>
+                <p class="text-gray-300 mb-4"><i class="far fa-clock mr-2"></i> Start: 18:00</p>
+                <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-opacity-90 transition">
+                    <i class="fas fa-ticket-alt mr-2"></i> Kup bilet
+                </button>
+                <button class="w-full bg-gray-700 text-white py-2 rounded-lg mt-2 hover:bg-gray-600 transition">
+                    <i class="fas fa-map-marker-alt mr-2"></i> Pokaż na mapie
+                </button>
+            </div>
+          </div>
 
           <!-- Informacje o CMS -->
           <div class="glass-card animate-fade-in p-6">
@@ -403,45 +565,72 @@ const formatDate = (date) => {
     )}
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-blue-800 py-12 mt-16">
-    <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-xl font-heading font-bold mb-4">Rapoland.nl</h3>
-          <p class="text-blue-400">
-            Najlepsze wydarzenia w Holandii w jednym miejscu. Koncerty, festiwale i wiele więcej.
-          </p>
-        </div>
+  <!-- Stopka -->
+    <footer class="bg-gray-900 text-white py-12 street-border">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="bg-primary p-2 rounded-lg">
+                            <i class="fas fa-microphone-alt text-white text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bebas">RAPO<span class="text-graffiti">UNDERGROUND</span></h2>
+                    </div>
+                    <p class="text-gray-400 mb-4">Największy portal z wydarzeniami i aktualnościami polskiej sceny undergroundowej.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-youtube text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-tiktok text-xl"></i></a>
+                    </div>
+                </div>
 
-        <div>
-          <h4 class="font-heading font-semibold mb-4">Szybkie linki</h4>
-          <ul class="space-y-3 text-blue-400">
-            <li><a href="/admin/" class="hover:text-white transition-colors">Panel administracyjny</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Regulamin</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Polityka prywatności</a></li>
-          </ul>
-        </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Szybkie linki</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Strona główna</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Wydarzenia</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Aktualności</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Artyści</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Kontakt</a></li>
+                    </ul>
+                </div>
 
-        <div>
-          <h4 class="font-heading font-semibold mb-4">Kontakt</h4>
-          <ul class="space-y-3 text-blue-400">
-            <li class="flex items-center">
-              <i class="fas fa-envelope mr-2 text-blue-300"></i>
-              <span>kontakt@wydarzenia.pl</span>
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-phone mr-2 text-blue-300"></i>
-              <span>+48 123 456 789</span>
-            </li>
-          </ul>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Kategorie</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Bitwy freestyle</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Koncerty klubowe</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Warsztaty</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Jam session</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Turnieje taneczne</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Kontakt</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                            <span>ul. Podziemna 15, 00-001 Warszawa</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-primary"></i>
+                            <span>+48 123 456 789</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
+                            <span>info@rapounderground.pl</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
+                <p>© 2023 RapoUnderground. Wszelkie prawa zastrzeżone.</p>
+            </div>
         </div>
-      </div>
-      <div class="border-t border-blue-800 mt-10 pt-8 text-center text-blue-500">
-        <p>&copy; {new Date().getFullYear()} Rapoland.nl - Polski Rap w Holandii</p>
-      </div>
-    </div>
-  </footer>
+    </footer>
 
   <script>
     // Obsługa mapy

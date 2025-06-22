@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapoland - Aktualności i Wydarzenia Muzyczne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff3e82',
+                        secondary: '#8e44ad',
+                        dark: '#1a1a2e',
+                        accent: '#00c9b7',
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .card-hover {
+                @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-xl;
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            }
+            .text-gradient {
+                background: linear-gradient(90deg, #ff3e82 0%, #8e44ad 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-poppins">
+    <!-- Nagłówek -->
+    <header class="gradient-bg text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-primary p-2 rounded-lg">
+                    <i class="fas fa-music text-white text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold">RAPO<span class="text-accent">LAND</span></h1>
+            </div>
+
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="font-medium hover:text-primary transition">Strona Główna</a>
+                <a href="#" class="font-medium hover:text-primary transition">Wydarzenia</a>
+                <a href="#" class="font-medium hover:text-primary transition">Aktualności</a>
+                <a href="#" class="font-medium hover:text-primary transition">Artyści</a>
+                <a href="#" class="font-medium hover:text-primary transition">Kontakt</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <button class="bg-primary px-4 py-2 rounded-lg font-medium hover:bg-opacity-90 transition">Logowanie</button>
+                <button class="md:hidden text-white">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h2 class="text-4xl md:text-6xl font-bold mb-4">Najświeższe <span class="text-gradient">wydarzenia muzyczne</span></h2>
+                <p class="text-lg text-gray-300 mb-6">Bądź na bieżąco z koncertami, festiwalami i premierami w polskiej scenie rapowej. Znajdź swoje ulubione wydarzenia i kup bilety w najlepszych cenach.</p>
+                <div class="flex flex-wrap gap-3">
+                    <button class="bg-primary px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition">Zobacz nadchodzące wydarzenia</button>
+                    <button class="bg-white text-dark px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition">Zapisz się do newslettera</button>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative">
+                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-accent rounded-lg rotate-12"></div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary rounded-lg -rotate-12"></div>
+                    <div class="relative bg-gray-200 border-2 border-dashed rounded-xl w-64 h-64 md:w-80 md:h-80" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nadchodzące wydarzenia -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold"><span class="text-gradient">Nadchodzące</span> wydarzenia</h2>
+                <a href="#" class="text-primary font-medium flex items-center">
+                    Zobacz wszystkie <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Event Card 1 -->
+                <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500 relative">
+                        <div class="absolute top-4 left-4 bg-white text-dark py-1 px-3 rounded-lg font-bold">25 CZE</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold mb-1">Festiwal Rap Generation</h3>
+                                <p class="text-gray-600"><i class="fas fa-map-marker-alt mr-2 text-primary"></i> Stadion Narodowy, Warszawa</p>
+                            </div>
+                            <div class="bg-primary text-white py-1 px-3 rounded-lg font-bold">18:00</div>
+                        </div>
+                        <p class="text-gray-700 mb-6">Największy festiwal rapowy tego lata z udziałem Taco Hemingway, Quebonafide, Young Leosia i wielu innych!</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg">od 99 zł</span>
+                            <button class="bg-dark text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition">Kup bilet</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="h-48 bg-gradient-to-r from-blue-500 to-teal-500 relative">
+                        <div class="absolute top-4 left-4 bg-white text-dark py-1 px-3 rounded-lg font-bold">30 CZE</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold mb-1">Sobel - Album Tour</h3>
+                                <p class="text-gray-600"><i class="fas fa-map-marker-alt mr-2 text-primary"></i> Klub Stodoła, Warszawa</p>
+                            </div>
+                            <div class="bg-primary text-white py-1 px-3 rounded-lg font-bold">20:00</div>
+                        </div>
+                        <p class="text-gray-700 mb-6">Premiera nowego albumu "Pułapka Na Motyle" - specjalny koncert tylko w 5 miastach Polski!</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg">od 120 zł</span>
+                            <button class="bg-dark text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition">Kup bilet</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="h-48 bg-gradient-to-r from-yellow-500 to-red-500 relative">
+                        <div class="absolute top-4 left-4 bg-white text-dark py-1 px-3 rounded-lg font-bold">5 LIP</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold mb-1">Oldschool Rap Night</h3>
+                                <p class="text-gray-600"><i class="fas fa-map-marker-alt mr-2 text-primary"></i> Hala Stulecia, Wrocław</p>
+                            </div>
+                            <div class="bg-primary text-white py-1 px-3 rounded-lg font-bold">19:30</div>
+                        </div>
+                        <p class="text-gray-700 mb-6">Wieczór z legendami polskiego rapu: OSTR, Peja, Łona, WWO i wielu innych w jednym miejscu!</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg">od 79 zł</span>
+                            <button class="bg-dark text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition">Kup bilet</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aktualności -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold"><span class="text-gradient">Najnowsze</span> aktualności</h2>
+                <a href="#" class="text-primary font-medium flex items-center">
+                    Więcej aktualności <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- News Card 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="h-48 bg-gradient-to-r from-purple-400 to-indigo-600"></div>
+                    <div class="p-6">
+                        <span class="text-sm text-primary font-medium">WYWIAD</span>
+                        <h3 class="text-xl font-bold my-3">Taco Hemingway o nowym albumie: "To będzie rewolucja"</h3>
+                        <p class="text-gray-600 mb-4">W ekskluzywnym wywiadzie Taco zdradza szczegóły nadchodzącego albumu i zmiany w swojej twórczości.</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>2 godziny temu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Card 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="h-48 bg-gradient-to-r from-teal-400 to-green-500"></div>
+                    <div class="p-6">
+                        <span class="text-sm text-primary font-medium">PREMIERA</span>
+                        <h3 class="text-xl font-bold my-3">Nowy klip Young Leosi bije rekordy</h3>
+                        <p class="text-gray-600 mb-4">"Hulaj dusza" zdobyło milion wyświetleń w 24 godziny. Zobacz najnowszy hit!</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>Wczoraj</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Card 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="h-48 bg-gradient-to-r from-orange-400 to-red-500"></div>
+                    <div class="p-6">
+                        <span class="text-sm text-primary font-medium">FESTIWAL</span>
+                        <h3 class="text-xl font-bold my-3">Open'er 2023: Rapowa scena zaskakuje</h3>
+                        <p class="text-gray-600 mb-4">Kto z polskich raperów zagra na Open'erze? Znamy już pierwsze nazwiska!</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>2 dni temu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Card 4 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+                    <div class="h-48 bg-gradient-to-r from-blue-400 to-cyan-500"></div>
+                    <div class="p-6">
+                        <span class="text-sm text-primary font-medium">ZAGRANICA</span>
+                        <h3 class="text-xl font-bold my-3">Polski rap podbija Europę</h3>
+                        <p class="text-gray-600 mb-4">Sukcesy Malik Montana i White 2115 na europejskich listach przebojów. Polski rap ma się lepiej niż kiedykolwiek!</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="far fa-clock mr-2"></i>
+                            <span>3 dni temu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 gradient-bg">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Nie przegap żadnego wydarzenia!</h2>
+            <p class="text-gray-300 max-w-2xl mx-auto mb-8">Zapisz się do naszego newslettera i otrzymuj najświeższe informacje o koncertach, premierach i konkursach jako pierwszy.</p>
+
+            <div class="max-w-2xl mx-auto flex flex-col sm:flex-row gap-4">
+                <input type="email" placeholder="Twój adres e-mail" class="flex-grow px-6 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                <button class="bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-opacity-90 transition">Zapisz się</button>
+            </div>
+
+            <p class="text-gray-400 text-sm mt-4">Zgadzam się na przetwarzanie moich danych osobowych zgodnie z polityką prywatności.</p>
+        </div>
+    </section>
+
+    <!-- Stopka -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="bg-primary p-2 rounded-lg">
+                            <i class="fas fa-music text-white text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold">RAPO<span class="text-accent">LAND</span></h2>
+                    </div>
+                    <p class="text-gray-400 mb-4">Największy portal z wydarzeniami i aktualnościami polskiej sceny rapowej.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-youtube text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-tiktok text-xl"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Szybkie linki</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Strona główna</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Wydarzenia</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Aktualności</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Artyści</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Kontakt</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Kategorie</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Koncerty</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Festiwale</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Wywiady</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Premiery</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Relacje</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Kontakt</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                            <span>ul. Muzyczna 15, 00-001 Warszawa</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-primary"></i>
+                            <span>+48 123 456 789</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
+                            <span>info@rapoland.pl</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
+                <p>© 2023 Rapoland. Wszelkie prawa zastrzeżone.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Prosta animacja dla elementów podczas przewijania
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fadeIn');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
