@@ -5,14 +5,28 @@ import { format } from 'date-fns';
 import { pl } from 'date-fns/locale/pl';
 
 // Pobieranie wydarzeń z Decap CMS
+const newsFiles = await Astro.glob('../content/news/*.md');
+const news = newsFiles.map(event => {
+  return {
+    ...event.frontmatter,
+    date: new Date(event.frontmatter.date),
+    slug: event.file.split('/').pop().split('.').shift()
+  }
+})
+.sort((a, b) => b.date - a.date)
+.slice(0, 20);
+
 const eventFiles = await Astro.glob('../content/events/*.md');
-const events = eventFiles.map(event => ({
-  ...event.frontmatter,
-  startDate: new Date(event.frontmatter.start_date),
-  slug: event.file.split('/').pop().split('.').shift()
-}))
+const events = eventFiles.map(event => {
+  return {
+    ...event.frontmatter,
+    startDate: new Date(event.frontmatter.start_date),
+    slug: event.file.split('/').pop().split('.').shift()
+  }
+})
 // .filter(event => event.startDate >= new Date())
-.sort((a, b) => a.startDate - b.startDate);
+.sort((a, b) => b.startDate - a.startDate);
+// .slice(0, 10);
 
 // Konfiguracja Tailwind
 const tailwindConfig = {
@@ -73,7 +87,8 @@ const tailwindConfig = {
 
 // Funkcja pomocnicza do formatowania daty
 const formatDate = (date) => {
-  return format(date, 'd MMMM yyyy, HH:mm', { locale: pl });
+  console.log('Formatting date:', date);
+  return date ? format(date, 'd MMMM yyyy, HH:mm', { locale: pl }) : '';;
 };
 ---
 
@@ -236,10 +251,7 @@ const formatDate = (date) => {
               <p class="text-blue-300 text-md mt-2">Co słychać w holenderskim świecie hip-hopu</p>
             </div>
             <div class="flex items-center space-x-4">
-              <div class="text-sm bg-blue-900/30 px-4 py-2 rounded-full">
-                {events.length} {events.length === 1 ? 'wydarzenie' : 'wydarzeń'}
-              </div>
-               <a href="#" class="text-primary font-medium flex items-center">
+               <a href="#" class="text-primary font-medium flex items-center hover:text-red-500">
                   Zobacz wszystkie <i class="fas fa-arrow-right ml-2"></i>
               </a>
             </div>
@@ -247,84 +259,64 @@ const formatDate = (date) => {
 
             <div class="news-scroll-container flex overflow-x-auto pb-6 space-x-4">
                 <!-- News Card 1 -->
-                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
-                    <div class="h-40 bg-gradient-to-r from-purple-900 to-purple-700 relative">
-                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
-                    </div>
-                    <div class="p-5">
-                        <span class="text-sm text-primary font-medium">BITWA</span>
-                        <h3 class="text-xl font-bold my-3 text-white">Underground Freestyle Battle w Warszawie</h3>
-                        <p class="text-gray-400 mb-4">Zapisy na listopadową bitwę już otwarte. Pula nagród: 5000 zł!</p>
-                        <div class="flex items-center text-gray-500">
-                            <i class="far fa-clock mr-2"></i>
-                            <span>2 godziny temu</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- News Card 2 -->
-                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
-                    <div class="h-40 bg-gradient-to-r from-green-900 to-green-700 relative">
-                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">PREMIERA</div>
-                    </div>
-                    <div class="p-5">
-                        <span class="text-sm text-primary font-medium">ALBUM</span>
-                        <h3 class="text-xl font-bold my-3 text-white">"Ciemna strona miasta" - nowy album Łony</h3>
-                        <p class="text-gray-400 mb-4">Legendarny raper powraca z nowym materiałem inspirowanym życiem w blokowiskach.</p>
-                        <div class="flex items-center text-gray-500">
-                            <i class="far fa-clock mr-2"></i>
-                            <span>Wczoraj</span>
+                {news.map(newsItem => (
+                  <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
+                      {newsItem.thumbnail ? (
+                        <div class="h-40 relative">
+                          <img
+                            src={newsItem.thumbnail}
+                            alt={newsItem.title}
+                            class="w-full h-full object-cover"
+                            style="min-height: 10rem; max-height: 10rem;"
+                          />
+                          <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
                         </div>
-                    </div>
-                </div>
+                      ) : (
+                        <div class="h-40 bg-gradient-to-r from-purple-900 to-purple-700 relative">
+                          <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
+                        </div>
+                      )}
+                      <div class="p-5">
+                          <span class="text-sm text-primary font-medium">{newsItem.category}</span>
+                          <h3 class="text-xl font-bold my-3 text-white">{newsItem.title}</h3>
+                          <p class="text-gray-400 mb-4">
+                            {newsItem.short_description.slice(0, 80) + '...'}
+                          </p>
+                          <div class="flex items-center text-gray-500">
+                              <i class="far fa-clock mr-2"></i>
+                                <span>
+                                {(() => {
+                                  const now = new Date();
+                                  const date = new Date(newsItem.date);
+                                  const diffMs = now - date;
+                                  const diffSec = Math.floor(diffMs / 1000);
+                                  const diffMin = Math.floor(diffSec / 60);
+                                  const diffHour = Math.floor(diffMin / 60);
+                                  const diffDay = Math.floor(diffHour / 24);
 
-                <!-- News Card 3 -->
-                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
-                    <div class="h-40 bg-gradient-to-r from-red-900 to-red-700 relative">
-                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">RELAX</div>
-                    </div>
-                    <div class="p-5">
-                        <span class="text-sm text-primary font-medium">WARSZTATY</span>
-                        <h3 class="text-xl font-bold my-3 text-white">Bezpłatne warsztaty beatboxu w Krakowie</h3>
-                        <p class="text-gray-400 mb-4">Chcesz nauczyć się podstaw beatboxu? Przyjdź w sobotę do klubu Underground.</p>
-                        <div class="flex items-center text-gray-500">
-                            <i class="far fa-clock mr-2"></i>
-                            <span>2 dni temu</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- News Card 4 -->
-                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
-                    <div class="h-40 bg-gradient-to-r from-blue-900 to-blue-700 relative">
-                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">KONCERT</div>
-                    </div>
-                    <div class="p-5">
-                        <span class="text-sm text-primary font-medium">IMPREZA</span>
-                        <h3 class="text-xl font-bold my-3 text-white">Oldschool hip-hop night w Łodzi</h3>
-                        <p class="text-gray-400 mb-4">Sety DJ-a Abradab i specjalny występ Peji. Bilety już w sprzedaży.</p>
-                        <div class="flex items-center text-gray-500">
-                            <i class="far fa-clock mr-2"></i>
-                            <span>3 dni temu</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- News Card 5 -->
-                <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
-                    <div class="h-40 bg-gradient-to-r from-yellow-900 to-yellow-700 relative">
-                        <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">WYDARZENIE</div>
-                    </div>
-                    <div class="p-5">
-                        <span class="text-sm text-primary font-medium">FESTIWAL</span>
-                        <h3 class="text-xl font-bold my-3 text-white">Podziemna Scena Fest - edycja jesienna</h3>
-                        <p class="text-gray-400 mb-4">3 dni, 20 wykonawców, tylko underground. Bilety w przedsprzedaży.</p>
-                        <div class="flex items-center text-gray-500">
-                            <i class="far fa-clock mr-2"></i>
-                            <span>4 dni temu</span>
-                        </div>
-                    </div>
-                </div>
+                                  if (diffDay === 0) {
+                                  if (diffHour === 0) {
+                                    if (diffMin < 2) return 'przed chwilą';
+                                    if (diffMin < 60) return `dzisiaj, ${diffMin} min temu`;
+                                    return `dzisiaj, ${diffHour} godz temu`;
+                                  }
+                                  return `dzisiaj, ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                                  }
+                                  if (diffDay === 1) {
+                                  return `wczoraj, ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                                  }
+                                  if (diffDay < 7) {
+                                  return `${diffDay} dni temu`;
+                                  }
+                                  // Fallback to formatted date
+                                  return formatDate(date);
+                                })()}
+                                </span>
+                          </div>
+                      </div>
+                  </div>
+                ))};
             </div>
         </div>
     </section>
@@ -343,7 +335,7 @@ const formatDate = (date) => {
               <div class="text-sm bg-blue-900/30 px-4 py-2 rounded-full">
                 {events.length} {events.length === 1 ? 'wydarzenie' : 'wydarzeń'}
               </div>
-               <a href="#" class="text-primary font-medium flex items-center">
+               <a href="#" class="text-primary font-medium flex items-center hover:text-red-500">
                   Zobacz wszystkie <i class="fas fa-arrow-right ml-2"></i>
               </a>
             </div>
@@ -360,7 +352,9 @@ const formatDate = (date) => {
                       <img
                         src={event.thumbnail}
                         alt={event.title}
-                        class="w-full h-full object-cover min-h-[200px]"
+                        // class="w-full h-full object-cover min-h-[200px]"
+                        class="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105 hover:max-h-[14rem]"
+                        style="min-height: 10rem; max-height: 14rem;"
                       />
                     )}
                     <div class="absolute bottom-4 left-4">
@@ -391,8 +385,8 @@ const formatDate = (date) => {
                       </div>
                     )}
 
-                    {event.description && (
-                      <p class="mt-4 text-blue-300">{event.description}</p>
+                    {event.short_description && (
+                      <p class="mt-4 text-blue-300">{event.short_description.slice(0, 200) + '...'}</p>
                     )}
 
                     <div class="mt-6 flex flex-wrap gap-3">
@@ -574,9 +568,9 @@ const formatDate = (date) => {
                         <div class="bg-primary p-2 rounded-lg">
                             <i class="fas fa-microphone-alt text-white text-xl"></i>
                         </div>
-                        <h2 class="text-2xl font-bebas">RAPO<span class="text-graffiti">UNDERGROUND</span></h2>
+                        <h2 class="text-2xl font-bebas">RAP<span class="text-graffiti">OLAND</span></h2>
                     </div>
-                    <p class="text-gray-400 mb-4">Największy portal z wydarzeniami i aktualnościami polskiej sceny undergroundowej.</p>
+                    <p class="text-gray-400 mb-4">Największy holenderski portal z wydarzeniami i aktualnościami polskiej sceny undergroundowej.</p>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook-f text-xl"></i></a>
                         <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram text-xl"></i></a>
@@ -627,7 +621,7 @@ const formatDate = (date) => {
             </div>
 
             <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
-                <p>© 2023 RapoUnderground. Wszelkie prawa zastrzeżone.</p>
+                <p>&copy; 2025 Rapoland.nl</p>
             </div>
         </div>
     </footer>

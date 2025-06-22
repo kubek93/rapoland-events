@@ -20,6 +20,7 @@ collections:
       preview: false
     fields:
       - { label: "Tytuł wydarzenia", name: "title", widget: "string" }
+      - { label: "Skrócony opis", name: "short_description", widget: "text" }
       - { label: "Opis wydarzenia", name: "description", widget: "text" }
       - { label: "Data startu", name: "start_date", widget: "datetime", format: "YYYY-MM-DD HH:mm", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
       - { label: "Lokalizacja", name: "location", widget: "string", required: false }
@@ -40,12 +41,13 @@ collections:
         widget: "select"
         default: "news"
         options:
-          - { label: "News", value: "news" }
+          - { label: "Information", value: "information" }
           - { label: "Video", value: "video" }
           - { label: "Music", value: "music" }
           - { label: "Interview", value: "interview" }
       - { label: "Data publikacji", name: "date", widget: "datetime" }
+      - { label: "Krótki Opis", name: "short_description", widget: "text", required: false }
       - { label: "Opis", name: "description", widget: "text", required: false }
       - { label: "Tagi", name: "tags", widget: "list", required: false }
-      - { label: "Zdjęcie", name: "image", widget: "image", required: false }
+      - { label: "Zdjęcie", name: "thumbnail", widget: "image", required: false }
       - { label: "Opublikowano", name: "published", widget: "boolean", required: false }
