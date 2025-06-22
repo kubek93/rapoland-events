@@ -5,7 +5,7 @@ backend:
   name: github
   repo: kubek93/rapoland-events
   branch: main
-  # auth_scope: repo
+  auth_scope: repo
 
 # backend:
 #   name: git-gateway
