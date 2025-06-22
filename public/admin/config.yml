@@ -22,7 +22,20 @@ collections:
       - { label: "Tytuł wydarzenia", name: "title", widget: "string" }
       - { label: "Opis wydarzenia", name: "description", widget: "text" }
       - { label: "Data startu", name: "start_date", widget: "datetime", format: "YYYY-MM-DD HH:mm", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
-      - { label: "Lokalizacja", name: "location", widget: "string" }
-      - { label: "Link do biletów", name: "tickets_url", widget: "string" }
-      - { label: "Link do Google Maps", name: "google_maps_url", widget: "string" }
+      - { label: "Lokalizacja", name: "location", widget: "string", required: false }
+      - { label: "Link do biletów", name: "tickets_url", widget: "string", required: false }
+      - { label: "Link do Google Maps", name: "google_maps_url", widget: "string", required: false }
       - { label: "Zdjęcie", name: "thumbnail", widget: "image", required: true }
+  - name: "blog"
+    label: "Blog"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Tytuł", name: "title", widget: "string" }
+      - { label: "Data", name: "date", widget: "datetime" }
+      - { label: "Opis", name: "description", widget: "text", required: false }
+      - { label: "Autor", name: "author", widget: "string", required: false }
+      - { label: "Tagi", name: "tags", widget: "list", required: false }
+      - { label: "Zdjęcie", name: "image", widget: "image", required: false }
+      - { label: "Opublikowany", name: "published", widget: "boolean", required: false }
