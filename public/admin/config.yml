@@ -1,12 +1,12 @@
-# backend:
-#   name: github
-#   repo: kubek93/rapoland-events
-#   branch: main
-#   auth_scope: repo
-
 backend:
-  name: git-gateway
+  name: github
+  repo: kubek93/rapoland-events
   branch: main
+  auth_scope: repo
+
+# backend:
+#   name: git-gateway
+#   branch: main
 
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
