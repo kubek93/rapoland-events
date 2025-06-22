@@ -1,15 +1,11 @@
 # test
 # https://github.com/settings/developers
-# https://app.netlify.com/projects/silver-trifle-482fa2/configuration/identity#content
+# https://docs.netlify.com/security/secure-access-to-sites/oauth-provider-tokens/#netlify-ui-settings
 backend:
   name: github
   repo: kubek93/rapoland-events
   branch: main
   auth_scope: repo
-
-# backend:
-#   name: git-gateway
-#   branch: main
 
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
@@ -23,11 +19,8 @@ collections:
     editor:
       preview: false
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
-      - { label: "Start Time", name: "startTime", widget: "string", required: false }
-      - { label: "Location", name: "location", widget: "string" }
-      - { label: "Description", name: "description", widget: "text" }
-      - { label: "Category", name: "category", widget: "select", options: ["Technology", "Music", "Art & Culture", "Sports", "Business"] }
-      - { label: "Featured Color", name: "color", widget: "select", options: ["blue", "green", "purple", "amber"] }
-      - { label: "Attendees", name: "attendees", widget: "list", fields: [{ label: "Name", name: "name", widget: "string" }], required: false }
+      - { label: "Tytuł wydarzenia", name: "title", widget: "string" }
+      - { label: "Opis wydarzenia", name: "description", widget: "text" }
+      - { label: "Data startu", name: "start_date", widget: "datetime", format: "YYYY-MM-DD HH:mm", date_format: "YYYY-MM-DD", time_format: "HH:mm" }     - { label: "Lokalizacja", name: "location", widget: "string" }
+      - { label: "Bilety", name: "tickets_url", widget: "string" }
+      - { label: "Link do Google Maps", name: "google_maps_url", widget: "string" }
