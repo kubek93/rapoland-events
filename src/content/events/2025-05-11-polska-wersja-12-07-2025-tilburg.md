@@ -15,7 +15,7 @@ description: |-
   Data: 12.07.25
    Drzwi: 20:00
   Bilety : https://www.013.nl/programma/109003/polska-wersja
-start_date: "2025-05-11 14:25:57"
+start_date: "2025-05-11 20:00:00"
 thumbnail: "/images/uploads/8737e7a1-861f-4fd6-9a2d-63dd652a603e.jpeg"
 published: true
 tags: []
