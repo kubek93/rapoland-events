@@ -154,19 +154,21 @@ const formatDate = (date) => {
 </head>
 <body class="font-sans antialiased">
   <!-- Header -->
-  <nav class="navbar sticky bg-indigo-950 top-0 z-50">
+  <nav class="navbar sticky bg-blue-950 top-0 z-50">
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center py-3">
             <!-- Logo -->
             <div class="flex items-center">
+              <a href="/" class="nav-link text-white-700 hover:text-red-500 font-medium">
                 <img class="h-12" src="https://www.rapoland.nl/back/wp-content/themes/revelio/images/logo.png" alt="Rapoland.nl logo" />
+              </a>
             </div>
 
             <!-- Linki desktop -->
             <div class="hidden md:flex items-center space-x-8">
-              <a href="/aktualnosci" class="nav-link text-white-700 hover:text-red-500 font-medium">Aktualności</a>
-                <a href="/wydarzenia" class="nav-link text-white-700 hover:text-red-500 font-medium active">Wydarzenia</a>
-                <a href="/kontakt" class="nav-link text-white-700 hover:text-red-500 font-medium">Kontakt</a>
+              <a href="/" class="nav-link text-white-700 hover:text-red-500 font-medium">Aktualności</a>
+              <a href="/wydarzenia" class="nav-link text-white-700 hover:text-red-500 font-medium active">Wydarzenia</a>
+              <a href="/kontakt" class="nav-link text-white-700 hover:text-red-500 font-medium">Kontakt</a>
             </div>
 
             <!-- Przycisk mobilny -->
@@ -181,7 +183,7 @@ const formatDate = (date) => {
                 <a href="#wydarzenia" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Wydarzenia</a>
                 <a href="#aktualnosci" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Aktualności</a>
                 <a href="#kontakt" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Kontakt</a>
-                <a href="#" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg font-medium text-center shadow-md">
+                <a href="#" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2 rounded-lg font-medium text-center shadow-md">
                     <i class="fas fa-user mr-2"></i>Logowanie
                 </a>
             </div>
@@ -198,9 +200,9 @@ const formatDate = (date) => {
           <div class="flex justify-between items-center mb-8">
             <div>
               <h2 class="text-3xl font-heading font-bold text-white">Nadchodzące Wydarzenia</h2>
-              <p class="text-indigo-300 mt-2">Znajdź coś dla siebie</p>
+              <p class="text-blue-300 mt-2">Znajdź coś dla siebie</p>
             </div>
-            <div class="text-sm bg-indigo-900/30 px-4 py-2 rounded-full">
+            <div class="text-sm bg-blue-900/30 px-4 py-2 rounded-full">
               {events.length} {events.length === 1 ? 'wydarzenie' : 'wydarzeń'}
             </div>
           </div>
@@ -220,7 +222,7 @@ const formatDate = (date) => {
                       />
                     )}
                     <div class="absolute bottom-4 left-4">
-                      <div class="date-badge bg-indigo-900/80 text-white px-4 py-2 rounded-lg">
+                      <div class="date-badge bg-blue-900/80 text-white px-4 py-2 rounded-lg">
                         <div class="text-xl font-bold">
                           {format(event.startDate, 'd', { locale: pl })}
                         </div>
@@ -235,20 +237,20 @@ const formatDate = (date) => {
                   <div class="md:w-3/5 p-6">
                     <h3 class="text-xl font-heading font-bold text-white">{event.title}</h3>
 
-                    <div class="mt-4 flex items-center text-indigo-200">
+                    <div class="mt-4 flex items-center text-blue-200">
                       <i class="far fa-clock mr-2 text-blue-400"></i>
                       <span>{formatDate(event.startDate)}</span>
                     </div>
 
                     {event.location && (
-                      <div class="mt-3 flex items-center text-indigo-200">
+                      <div class="mt-3 flex items-center text-blue-200">
                         <i class="fas fa-map-marker-alt mr-2 text-blue-400"></i>
                         <span>{event.location}</span>
                       </div>
                     )}
 
                     {event.description && (
-                      <p class="mt-4 text-indigo-300">{event.description}</p>
+                      <p class="mt-4 text-blue-300">{event.description}</p>
                     )}
 
                     <div class="mt-6 flex flex-wrap gap-3">
@@ -266,7 +268,7 @@ const formatDate = (date) => {
                         <a
                           href={event.google_maps_url}
                           target="_blank"
-                          class="bg-indigo-900 hover:bg-indigo-800 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md inline-flex items-center"
+                          class="bg-blue-900 hover:bg-blue-800 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md inline-flex items-center"
                         >
                           <i class="fas fa-map-marked-alt mr-2"></i>Mapa
                         </a>
@@ -293,7 +295,7 @@ const formatDate = (date) => {
         <div class="lg:col-span-1 space-y-8">
           <!-- Kalendarz -->
           <div class="glass-card animate-fade-in">
-            <div class="bg-indigo-900/30 py-5 px-6 border-b border-indigo-800">
+            <div class="bg-blue-900/30 py-5 px-6 border-b border-blue-800">
               <div class="flex justify-between items-center">
                 <h2 class="text-xl font-heading font-semibold">
                   {format(new Date(), 'MMMM yyyy', { locale: pl })}
@@ -304,7 +306,7 @@ const formatDate = (date) => {
               <!-- Nagłówki dni -->
               <div class="grid grid-cols-7 gap-1 mb-4">
                 {['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb', 'Nd'].map(day => (
-                  <div class="text-center text-indigo-300 font-medium py-2">{day}</div>
+                  <div class="text-center text-blue-300 font-medium py-2">{day}</div>
                 ))}
               </div>
 
@@ -326,15 +328,15 @@ const formatDate = (date) => {
                   return (
                     <div
                       class={`text-center p-2 rounded-lg cursor-pointer
-                        ${isCurrentMonth ? 'text-white' : 'text-indigo-700'}
-                        ${isToday ? 'bg-indigo-800' : ''}
-                        ${hasEvents ? 'border border-indigo-500' : ''}
-                        hover:bg-indigo-900/30`}
+                        ${isCurrentMonth ? 'text-white' : 'text-blue-700'}
+                        ${isToday ? 'bg-blue-800' : ''}
+                        ${hasEvents ? 'border border-blue-500' : ''}
+                        hover:bg-blue-900/30`}
                     >
                       {date.getDate()}
                       {hasEvents && (
                         <div class="flex justify-center mt-1">
-                          <div class="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>
+                          <div class="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
                         </div>
                       )}
                     </div>
@@ -344,7 +346,7 @@ const formatDate = (date) => {
             </div>
             <div class="p-2">
               <a
-                href="/admin/"
+                href="/wydarzenia"
                 class="gradient-bg hover:opacity-90 text-white px-8 py-3 w-full rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl inline-flex items-center justify-center"
               >
                 Sprawdź cały kalendarz
@@ -369,7 +371,7 @@ const formatDate = (date) => {
           <!-- Informacje o CMS -->
           <div class="glass-card animate-fade-in p-6">
             <h3 class="font-heading font-semibold text-xl mb-4">Dodaj własne wydarzenie</h3>
-            <p class="text-indigo-300 mb-4">
+            <p class="text-blue-300 mb-4">
               Chcesz dodać swoje wydarzenie do naszego kalendarza? Skorzystaj z formularza i wyślij propozycję.
             </p>
             <a
@@ -384,9 +386,9 @@ const formatDate = (date) => {
     ) : (
       <div class="text-center py-20">
         <div class="glass-card max-w-2xl mx-auto p-12">
-          <i class="fas fa-calendar-times text-6xl text-indigo-500 mb-6"></i>
+          <i class="fas fa-calendar-times text-6xl text-blue-500 mb-6"></i>
           <h2 class="text-3xl font-heading font-bold text-white mb-4">Brak nadchodzących wydarzeń</h2>
-          <p class="text-indigo-300 mb-8">
+          <p class="text-blue-300 mb-8">
             Aktualnie nie mamy żadnych nadchodzących wydarzeń w naszym kalendarzu.
             Sprawdź później lub dodaj własne wydarzenie.
           </p>
@@ -402,19 +404,19 @@ const formatDate = (date) => {
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-indigo-800 py-12 mt-16">
+  <footer class="border-t border-blue-800 py-12 mt-16">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <h3 class="text-xl font-heading font-bold mb-4">Rapoland.nl</h3>
-          <p class="text-indigo-400">
+          <p class="text-blue-400">
             Najlepsze wydarzenia w Holandii w jednym miejscu. Koncerty, festiwale i wiele więcej.
           </p>
         </div>
 
         <div>
           <h4 class="font-heading font-semibold mb-4">Szybkie linki</h4>
-          <ul class="space-y-3 text-indigo-400">
+          <ul class="space-y-3 text-blue-400">
             <li><a href="/admin/" class="hover:text-white transition-colors">Panel administracyjny</a></li>
             <li><a href="#" class="hover:text-white transition-colors">Regulamin</a></li>
             <li><a href="#" class="hover:text-white transition-colors">Polityka prywatności</a></li>
@@ -423,19 +425,19 @@ const formatDate = (date) => {
 
         <div>
           <h4 class="font-heading font-semibold mb-4">Kontakt</h4>
-          <ul class="space-y-3 text-indigo-400">
+          <ul class="space-y-3 text-blue-400">
             <li class="flex items-center">
-              <i class="fas fa-envelope mr-2 text-indigo-300"></i>
+              <i class="fas fa-envelope mr-2 text-blue-300"></i>
               <span>kontakt@wydarzenia.pl</span>
             </li>
             <li class="flex items-center">
-              <i class="fas fa-phone mr-2 text-indigo-300"></i>
+              <i class="fas fa-phone mr-2 text-blue-300"></i>
               <span>+48 123 456 789</span>
             </li>
           </ul>
         </div>
       </div>
-      <div class="border-t border-indigo-800 mt-10 pt-8 text-center text-indigo-500">
+      <div class="border-t border-blue-800 mt-10 pt-8 text-center text-blue-500">
         <p>&copy; {new Date().getFullYear()} Rapoland.nl - Polski Rap w Holandii</p>
       </div>
     </div>
