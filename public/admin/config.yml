@@ -31,6 +31,8 @@ collections:
     folder: "src/content/news"
     create: true
     slug: "{{slug}}"
+    editor:
+      preview: false
     fields:
       - { label: "Tytuł", name: "title", widget: "string" }
       - name: "category"
@@ -44,7 +46,6 @@ collections:
           - { label: "Interview", value: "interview" }
       - { label: "Data publikacji", name: "date", widget: "datetime" }
       - { label: "Opis", name: "description", widget: "text", required: false }
-      - { label: "Autor", name: "author", widget: "string", required: false }
       - { label: "Tagi", name: "tags", widget: "list", required: false }
       - { label: "Zdjęcie", name: "image", widget: "image", required: false }
-      - { label: "Opublikowany", name: "published", widget: "boolean", required: false }
+      - { label: "Opublikowano", name: "published", widget: "boolean", required: false }
