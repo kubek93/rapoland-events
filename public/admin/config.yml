@@ -33,7 +33,7 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: "Tytuł", name: "title", widget: "string" }
-      - { label: "Data", name: "date", widget: "datetime" }
+      - { label: "Data publikacji", name: "date", widget: "datetime" }
       - { label: "Opis", name: "description", widget: "text", required: false }
       - { label: "Autor", name: "author", widget: "string", required: false }
       - { label: "Tagi", name: "tags", widget: "list", required: false }

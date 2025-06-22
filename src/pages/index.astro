@@ -1,62 +1,470 @@
 ---
 // src/pages/index.astro
-import Layout from '../layouts/Layout.astro';
-import Calendar from '../components/Calendar.astro';
-import EventList from '../components/EventList.astro';
+import { Image } from 'astro:assets';
+import { format } from 'date-fns';
+import { pl } from 'date-fns/locale/pl';
 
-// Pobierz wszystkie wydarzenia
+// Pobieranie wydarzeń z Decap CMS
 const eventFiles = await Astro.glob('../content/events/*.md');
 const events = eventFiles.map(event => ({
   ...event.frontmatter,
-  date: event.frontmatter.date,
-  slug: typeof event.file === 'string' ? event.file.split('/').pop()?.split('.')?.shift() ?? '' : ''
-})).filter(event => new Date(event.date) >= new Date())
-  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  startDate: new Date(event.frontmatter.start_date),
+  slug: event.file.split('/').pop().split('.').shift()
+}))
+// .filter(event => event.startDate >= new Date())
+.sort((a, b) => a.startDate - b.startDate);
+
+// Konfiguracja Tailwind
+const tailwindConfig = {
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        secondary: {
+          50: '#f5f3ff',
+          100: '#ede9fe',
+          200: '#ddd6fe',
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#8b5cf6',
+          600: '#7c3aed',
+          700: '#6d28d9',
+          800: '#5b21b6',
+          900: '#4c1d95',
+        },
+        dark: {
+          900: '#0f172a',
+          800: '#1e293b',
+          700: '#334155',
+        }
+      },
+      fontFamily: {
+        'sans': ['Inter', 'sans-serif'],
+        'heading': ['Poppins', 'sans-serif'],
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'slide-up': 'slideUp 0.4s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        }
+      }
+    }
+  }
+};
+
+// Funkcja pomocnicza do formatowania daty
+const formatDate = (date) => {
+  return format(date, 'd MMMM yyyy, HH:mm', { locale: pl });
+};
 ---
 
-<Layout title="Future Events">
-  <div class="container mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-8">
-      <div class="w-full lg:w-1/3">
-        <Calendar events={events} />
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wydarzenia | Kalendarz Imprez</title>
 
-        <div class="bg-white rounded-xl shadow-lg mt-8 p-6">
-          <h3 class="font-semibold text-lg mb-4">Filter Events</h3>
-          <form class="space-y-4" id="filter-form">
-            <div>
-              <label class="block text-gray-700 mb-2">Category</label>
-              <select name="category" class="w-full p-2 border rounded-lg">
-                <option value="">All Categories</option>
-                {Array.from(new Set(events.map(e => e.category))).map(cat => (
-                  <option value={cat}>{cat}</option>
-                ))}
-              </select>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script>
+    tailwind.config = JSON.parse(`---${JSON.stringify(tailwindConfig.theme)}---`);
+  </script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      color: #e2e8f0;
+    }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .event-card {
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .date-badge {
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .date-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, #7c3aed 0%, #0ea5e9 100%);
+    }
+
+    .map-container {
+      height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased">
+  <!-- Header -->
+  <nav class="navbar sticky bg-indigo-950 top-0 z-50">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-3">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <img class="h-12" src="https://www.rapoland.nl/back/wp-content/themes/revelio/images/logo.png" alt="Rapoland.nl logo" />
             </div>
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition duration-300">
-              Apply Filters
-            </button>
-          </form>
-        </div>
-      </div>
 
-      <div class="w-full lg:w-2/3">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800">Upcoming Events</h2>
-          <div class="text-sm">
-            Showing {events.length} events
+            <!-- Linki desktop -->
+            <div class="hidden md:flex items-center space-x-8">
+              <a href="/aktualnosci" class="nav-link text-white-700 hover:text-red-500 font-medium">Aktualności</a>
+                <a href="/wydarzenia" class="nav-link text-white-700 hover:text-red-500 font-medium active">Wydarzenia</a>
+                <a href="/kontakt" class="nav-link text-white-700 hover:text-red-500 font-medium">Kontakt</a>
+            </div>
+
+            <!-- Przycisk mobilny -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 focus:outline-none">
+                <i class="fas fa-bars text-2xl hamburger"></i>
+            </button>
+        </div>
+
+        <!-- Menu mobilne -->
+        <div id="mobile-menu" class="mobile-menu md:hidden">
+            <div class="flex flex-col space-y-4 pb-4">
+                <a href="#wydarzenia" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Wydarzenia</a>
+                <a href="#aktualnosci" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Aktualności</a>
+                <a href="#kontakt" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Kontakt</a>
+                <a href="#" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg font-medium text-center shadow-md">
+                    <i class="fas fa-user mr-2"></i>Logowanie
+                </a>
+            </div>
+        </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-12">
+    {events.length > 0 ? (
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Lista wydarzeń -->
+        <div class="lg:col-span-2">
+          <div class="flex justify-between items-center mb-8">
+            <div>
+              <h2 class="text-3xl font-heading font-bold text-white">Nadchodzące Wydarzenia</h2>
+              <p class="text-indigo-300 mt-2">Znajdź coś dla siebie</p>
+            </div>
+            <div class="text-sm bg-indigo-900/30 px-4 py-2 rounded-full">
+              {events.length} {events.length === 1 ? 'wydarzenie' : 'wydarzeń'}
+            </div>
+          </div>
+
+          <!-- Karty wydarzeń -->
+          <div class="space-y-6">
+            {events.map(event => (
+              <article class="glass-card event-card overflow-hidden animate-fade-in">
+                <div class="flex flex-col md:flex-row">
+                  <!-- Zdjęcie wydarzenia -->
+                  <div class="md:w-2/5 relative">
+                    {event.thumbnail && (
+                      <img
+                        src={event.thumbnail}
+                        alt={event.title}
+                        class="w-full h-full object-cover min-h-[200px]"
+                      />
+                    )}
+                    <div class="absolute bottom-4 left-4">
+                      <div class="date-badge bg-indigo-900/80 text-white px-4 py-2 rounded-lg">
+                        <div class="text-xl font-bold">
+                          {format(event.startDate, 'd', { locale: pl })}
+                        </div>
+                        <div class="text-sm uppercase">
+                          {format(event.startDate, 'MMM', { locale: pl })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Informacje o wydarzeniu -->
+                  <div class="md:w-3/5 p-6">
+                    <h3 class="text-xl font-heading font-bold text-white">{event.title}</h3>
+
+                    <div class="mt-4 flex items-center text-indigo-200">
+                      <i class="far fa-clock mr-2 text-blue-400"></i>
+                      <span>{formatDate(event.startDate)}</span>
+                    </div>
+
+                    {event.location && (
+                      <div class="mt-3 flex items-center text-indigo-200">
+                        <i class="fas fa-map-marker-alt mr-2 text-blue-400"></i>
+                        <span>{event.location}</span>
+                      </div>
+                    )}
+
+                    {event.description && (
+                      <p class="mt-4 text-indigo-300">{event.description}</p>
+                    )}
+
+                    <div class="mt-6 flex flex-wrap gap-3">
+                      {event.tickets_url && (
+                        <a
+                          href={event.tickets_url}
+                          target="_blank"
+                          class="gradient-bg hover:opacity-90 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md inline-flex items-center"
+                        >
+                          <i class="fas fa-ticket-alt mr-2"></i>Kup Bilet
+                        </a>
+                      )}
+
+                      {event.google_maps_url && (
+                        <a
+                          href={event.google_maps_url}
+                          target="_blank"
+                          class="bg-indigo-900 hover:bg-indigo-800 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md inline-flex items-center"
+                        >
+                          <i class="fas fa-map-marked-alt mr-2"></i>Mapa
+                        </a>
+                      )}
+
+                      {event.google_maps_url && (
+                        <a
+                          href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${format(event.startDate, 'yyyyMMdd\'T\'HHmmss')}%2F${format(new Date(event.startDate.getTime() + 2*60*60*1000), 'yyyyMMdd\'T\'HHmmss')}&text=${encodeURIComponent(event.title)}&location=${encodeURIComponent(event.location || '')}`}
+                          target="_blank"
+                          class="bg-gray-800 hover:bg-gray-700 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md inline-flex items-center"
+                        >
+                          <i class="far fa-calendar-plus mr-2"></i>Dodaj do kalendarza
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
 
-        <EventList events={events} />
+        <!-- Panel boczny -->
+        <div class="lg:col-span-1 space-y-8">
+          <!-- Kalendarz -->
+          <div class="glass-card animate-fade-in">
+            <div class="bg-indigo-900/30 py-5 px-6 border-b border-indigo-800">
+              <div class="flex justify-between items-center">
+                <h2 class="text-xl font-heading font-semibold">
+                  {format(new Date(), 'MMMM yyyy', { locale: pl })}
+                </h2>
+              </div>
+            </div>
+            <div class="p-4">
+              <!-- Nagłówki dni -->
+              <div class="grid grid-cols-7 gap-1 mb-4">
+                {['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb', 'Nd'].map(day => (
+                  <div class="text-center text-indigo-300 font-medium py-2">{day}</div>
+                ))}
+              </div>
+
+              <!-- Dni kalendarza -->
+              <div class="grid grid-cols-7 gap-1">
+                {Array.from({ length: 42 }).map((_, i) => {
+                  const today = new Date();
+                  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                  const startOffset = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+                  const date = new Date(today.getFullYear(), today.getMonth(), i - startOffset + 1);
+                  const isCurrentMonth = date.getMonth() === today.getMonth();
+                  const isToday = date.toDateString() === new Date().toDateString();
+                  const hasEvents = events.some(e =>
+                    e.startDate.getDate() === date.getDate() &&
+                    e.startDate.getMonth() === date.getMonth() &&
+                    e.startDate.getFullYear() === date.getFullYear()
+                  );
+
+                  return (
+                    <div
+                      class={`text-center p-2 rounded-lg cursor-pointer
+                        ${isCurrentMonth ? 'text-white' : 'text-indigo-700'}
+                        ${isToday ? 'bg-indigo-800' : ''}
+                        ${hasEvents ? 'border border-indigo-500' : ''}
+                        hover:bg-indigo-900/30`}
+                    >
+                      {date.getDate()}
+                      {hasEvents && (
+                        <div class="flex justify-center mt-1">
+                          <div class="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div class="p-2">
+              <a
+                href="/admin/"
+                class="gradient-bg hover:opacity-90 text-white px-8 py-3 w-full rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl inline-flex items-center justify-center"
+              >
+                Sprawdź cały kalendarz
+              </a>
+            </div>
+          </div>
+
+          <!-- Mapa wydarzeń -->
+          {events.length > 0 && events[0].google_maps_url && (
+            <div class="glass-card animate-fade-in p-6">
+              <h3 class="font-heading font-semibold text-xl mb-4">Lokalizacja najbliższego wydarzenia</h3>
+              <div class="map-container">
+                <iframe
+                  src={events[0].google_maps_url.replace('/place/', '/embed/')}
+                  allowFullScreen
+                  loading="lazy"
+                ></iframe>
+              </div>
+            </div>
+          )}
+
+          <!-- Informacje o CMS -->
+          <div class="glass-card animate-fade-in p-6">
+            <h3 class="font-heading font-semibold text-xl mb-4">Dodaj własne wydarzenie</h3>
+            <p class="text-indigo-300 mb-4">
+              Chcesz dodać swoje wydarzenie do naszego kalendarza? Skorzystaj z formularza i wyślij propozycję.
+            </p>
+            <a
+              href="/admin/"
+              class="gradient-bg hover:opacity-90 text-white w-full py-3 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl flex items-center justify-center"
+            >
+              <i class="fas fa-edit mr-2"></i>Formularz
+            </a>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div class="text-center py-20">
+        <div class="glass-card max-w-2xl mx-auto p-12">
+          <i class="fas fa-calendar-times text-6xl text-indigo-500 mb-6"></i>
+          <h2 class="text-3xl font-heading font-bold text-white mb-4">Brak nadchodzących wydarzeń</h2>
+          <p class="text-indigo-300 mb-8">
+            Aktualnie nie mamy żadnych nadchodzących wydarzeń w naszym kalendarzu.
+            Sprawdź później lub dodaj własne wydarzenie.
+          </p>
+          <a
+            href="/admin/"
+            class="gradient-bg hover:opacity-90 text-white px-8 py-3 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl inline-flex items-center"
+          >
+            <i class="fas fa-plus mr-2"></i>Dodaj Wydarzenie
+          </a>
+        </div>
+      </div>
+    )}
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-indigo-800 py-12 mt-16">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-heading font-bold mb-4">Rapoland.nl</h3>
+          <p class="text-indigo-400">
+            Najlepsze wydarzenia w Holandii w jednym miejscu. Koncerty, festiwale i wiele więcej.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-heading font-semibold mb-4">Szybkie linki</h4>
+          <ul class="space-y-3 text-indigo-400">
+            <li><a href="/admin/" class="hover:text-white transition-colors">Panel administracyjny</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Regulamin</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Polityka prywatności</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-heading font-semibold mb-4">Kontakt</h4>
+          <ul class="space-y-3 text-indigo-400">
+            <li class="flex items-center">
+              <i class="fas fa-envelope mr-2 text-indigo-300"></i>
+              <span>kontakt@wydarzenia.pl</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-phone mr-2 text-indigo-300"></i>
+              <span>+48 123 456 789</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-indigo-800 mt-10 pt-8 text-center text-indigo-500">
+        <p>&copy; {new Date().getFullYear()} Rapoland.nl - Polski Rap w Holandii</p>
       </div>
     </div>
-  </div>
+  </footer>
 
   <script>
-    document.getElementById('filter-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const category = e.target.category.value;
-      window.location.href = category ? `/events/category/${category.toLowerCase()}/` : '/';
+    // Obsługa mapy
+    document.querySelectorAll('.map-container iframe').forEach(iframe => {
+      iframe.onload = function() {
+        iframe.style.opacity = 1;
+      };
+      iframe.style.opacity = 0;
+      iframe.style.transition = 'opacity 0.5s ease-in-out';
+    });
+
+    // Animacje przycisków
+    document.querySelectorAll('a, button').forEach(btn => {
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform = 'scale(0.98)';
+      });
+
+      btn.addEventListener('mouseup', () => {
+        btn.style.transform = '';
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
     });
   </script>
-</Layout>
+</body>
+</html>
