@@ -2,8 +2,18 @@
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale/pl';
 
-const { events } = Astro.props;
-import Sidebar from './Sidebar.astro';
+const eventFiles = await Astro.glob('../content/events/*.md');
+const events = eventFiles.map(event => {
+  return {
+    ...event.frontmatter,
+    startDate: new Date(event.frontmatter.start_date),
+    slug: event.file.split('/').pop().split('.').shift()
+  }
+})
+// .filter(event => event.startDate >= new Date())
+.sort((a, b) => b.startDate - a.startDate);
+// .slice(0, 10);
+
 
 const formatDate = (date) => {
   console.log('Formatting date:', date);
@@ -118,10 +128,7 @@ const formatDate = (date) => {
 
         </div>
 
-        <Sidebar events={events} />
-
-
-
+        <slot />
       </div>
     ) : (
       <div class="text-center py-20">

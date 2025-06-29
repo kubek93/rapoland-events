@@ -1,13 +1,23 @@
 ---
 // src/components/Sidebar.astro
 
-import { format } from 'date-fns';
-import { pl } from 'date-fns/locale/pl';
+import { format } from "date-fns";
+import { pl } from "date-fns/locale/pl";
 
-const { events } = Astro.props;
+const eventFiles = await Astro.glob('../content/events/*.md');
+const events = eventFiles.map(event => {
+  return {
+    ...event.frontmatter,
+    startDate: new Date(event.frontmatter.start_date),
+    slug: event.file.split('/').pop().split('.').shift()
+  }
+})
+// .filter(event => event.startDate >= new Date())
+.sort((a, b) => b.startDate - a.startDate);
+// .slice(0, 10);
 ---
 
-<div class="lg:col-span-1 space-y-8">
+<div >
   <div class="bg-gray-800 rounded-xl p-5 mb-6">
     <h3 class="text-xl font-bold mb-4 text-white text-center">KALENDARZ</h3>
     <div class="bg-gray-900 rounded-lg p-4">
@@ -111,38 +121,56 @@ const { events } = Astro.props;
     )
   }
 
-  <!-- Stats -->
-  <div class="glass-card animate-fade-in">
-    <div class="p-6">
-      <h3 class="font-heading font-semibold text-lg mb-4">Event Stats</h3>
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-          <div class="text-3xl font-bold text-indigo-300">24</div>
-          <div class="text-sm text-indigo-400 mt-1">Upcoming Events</div>
-        </div>
-        <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-          <div class="text-3xl font-bold text-pink-300">8</div>
-          <div class="text-sm text-indigo-400 mt-1">This Week</div>
-        </div>
-        <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-          <div class="text-3xl font-bold text-amber-300">5</div>
-          <div class="text-sm text-indigo-400 mt-1">Free Events</div>
-        </div>
-        <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-          <div class="text-3xl font-bold text-emerald-300">12</div>
-          <div class="text-sm text-indigo-400 mt-1">Virtual</div>
-        </div>
+  <div class="glass-card animate-fade-in p-6">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
+        <div class="text-3xl font-bold text-indigo-300">24</div>
+        <div class="text-sm text-indigo-400 mt-1">Nadchodzących wydarzeń</div>
+      </div>
+      <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
+        <div class="text-3xl font-bold text-pink-300">2</div>
+        <div class="text-sm text-indigo-400 mt-1">W tym miesiącu</div>
       </div>
     </div>
   </div>
 
-  <!-- Informacje o CMS -->
+  <div class="bg-gradient-to-r from-blue-900 to-blue-700 rounded-xl p-5 mb-6">
+    <h3 class="text-xl font-bold mb-4 text-white text-center">NASI PARTNERZY</h3>
+    <div class="rounded-lg">
+      <div class="grid gap-2">
+        <a
+          href="https://www.facebook.com/JandD.VideoProductions/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group text-center glass-card bg-opacity-60 rounded-lg p-3 transition-all hover:bg-opacity-80 mx-auto"
+
+        >
+          <img
+            src="/images/uploads/logo-jd-video-2.png"
+            alt="Partner J&D Video Production logo"
+            class="w-1/2 mb-2 object-contain opacity-90 group-hover:opacity-100 transition-opacity mx-auto"
+
+          />
+          <span class="text-white font-medium text-center group-hover:text-blue-300 transition-colors">
+            J&amp;D Video Production
+          </span>
+        </a>
+      </div>
+      <button class="w-full bg-blue-600 text-white py-2 rounded-lg mt-4 hover:bg-blue-500 transition">
+        <i class="fas fa-handshake mr-2"></i> Zostań partnerem
+      </button>
+    </div>
+  </div>
+
   <div class="glass-card animate-fade-in p-6">
     <h3 class="font-heading font-semibold text-xl mb-4">Dodaj własne wydarzenie</h3>
-    <p class="text-blue-300 mb-4">Chcesz dodać swoje wydarzenie do naszego kalendarza? Skorzystaj z formularza i wyślij propozycję.</p>
+    <p class="text-blue-300 mb-4">
+      Chcesz dodać swoje wydarzenie do naszego kalendarza? Skorzystaj z formularza i wyślij propozycję.
+    </p>
     <a
       href="/admin/"
       class="gradient-bg hover:opacity-90 text-white w-full py-3 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl flex items-center justify-center"
+
     >
       <i class="fas fa-edit mr-2"></i>Formularz
     </a>

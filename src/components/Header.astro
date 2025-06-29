@@ -1,0 +1,16 @@
+---
+import { format } from 'date-fns';
+import { pl } from 'date-fns/locale/pl';
+
+const { pretitle, title, description } = Astro.props;
+
+---
+
+<section class="glass-card animate-fade-in p-6 text-white py-10 rounded-xl">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+        <div class="w-full md:mb-0 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">{pretitle} <span class="text-gradient">{title}</span></h2>
+            <p class="text-lg text-gray-300">{description}</p>
+        </div>
+    </div>
+</section>

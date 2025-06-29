@@ -1,9 +1,8 @@
 ---
 import '../styles/global.css';
-import NewsScroll from '../components/NewsScroll.astro';
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
-import Events from '../components/Events.astro';
+import News from '../components/News.astro';
 import Header from '../components/Header.astro';
 import Sidebar from '../components/Sidebar.astro';
 
@@ -18,7 +17,6 @@ const news = newsFiles.map(event => {
 })
 .sort((a, b) => b.date - a.date)
 .slice(0, 20);
-
 
 // Konfiguracja Tailwind
 const tailwindConfig = {
@@ -103,17 +101,13 @@ const tailwindConfig = {
   <!-- Header -->
   <Nav />
 
-
   <!-- Main Content -->
-  <main class="container mx-auto px-4 py-12">
-    <Header pretitle="Najświeższe" title="wydarzenia muzyczne" description="Bądź na bieżąco z koncertami, festiwalami i premierami w polskiej scenie rapowej." />
-    <NewsScroll title="Uliczne aktualności" description="Co słychać w holenderskim świecie hip-hopu" news={news.filter(({category}) => category !== 'interview')} />
-    <NewsScroll title="Wywiady z artystami" description="Poznaj bliżej twórców polskiej sceny hip-hopowej w Holandii" news={news.filter(({category}) => category === 'interview')} />
-    <Events>
-      <div class="lg:col-span-1 space-y-8">
-        <Sidebar />
-      </div>
-    </Events>
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <Header pretitle="Wszystkie" title="aktualności" description="Sprawdź co słychać na polskiej scenie muzycznej w Holandii." />
+
+    <News news={news}>
+      <Sidebar />
+    </News>
   </main>
 
   <Footer />

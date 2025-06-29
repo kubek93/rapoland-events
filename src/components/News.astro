@@ -1,0 +1,90 @@
+---
+import { format } from 'date-fns';
+import { pl } from 'date-fns/locale/pl';
+
+const { news } = Astro.props;
+
+const formatDate = (date) => {
+  console.log('Formatting date:', date);
+  return date ? format(date, 'd MMMM yyyy, HH:mm', { locale: pl }) : '';;
+};
+---
+
+<div class="mt-12">
+    {news.length > 0 ? (
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Lista wydarzeń -->
+        <div class="lg:col-span-2">
+
+          <!-- Karty wydarzeń -->
+          <div class="space-y-6">
+            {news.map(({title,
+              category,
+              date,
+              short_description,
+              description,
+              tags,
+              thumbnail,
+              published,
+              }) => (
+              <article class="glass-card event-card overflow-hidden animate-fade-in">
+                <div class="flex flex-col md:flex-row">
+                  <div class="md:w-2/5 relative">
+                    {thumbnail && (
+                      <img
+                        src={thumbnail}
+                        alt={title}
+                        // class="w-full h-full object-cover min-h-[200px]"
+                        class="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105 hover:max-h-[14rem]"
+                        style="min-height: 10rem; max-height: 14rem;"
+                      />
+                    )}
+                    <div class="absolute bottom-4 left-4">
+                      <div class="date-badge bg-blue-900/80 text-white px-4 py-2 rounded-lg">
+                        <div class="text-xl font-bold">
+                          {category}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="md:w-3/5 p-6">
+                    <h3 class="text-xl font-heading font-bold text-white">{title}</h3>
+
+                    <div class="mt-4 flex items-center text-blue-200">
+                      <i class="far fa-clock mr-2 text-blue-400"></i>
+                      <span>{formatDate(date)}</span>
+                    </div>
+
+                    <p>{short_description}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+        </div>
+
+        <slot />
+      </div>
+    ) : (
+      <div class="text-center py-20">
+        <div class="glass-card max-w-2xl mx-auto p-12">
+          <i class="fas fa-calendar-times text-6xl text-blue-500 mb-6"></i>
+          <h2 class="text-3xl font-heading font-bold text-white mb-4">Brak nadchodzących wydarzeń</h2>
+          <p class="text-blue-300 mb-8">
+            Aktualnie nie mamy żadnych nadchodzących wydarzeń w naszym kalendarzu.
+            Sprawdź później lub dodaj własne wydarzenie.
+          </p>
+          <a
+            href="/admin/"
+            class="gradient-bg hover:opacity-90 text-white px-8 py-3 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl inline-flex items-center"
+          >
+            <i class="fas fa-plus mr-2"></i>Dodaj Wydarzenie
+          </a>
+        </div>
+      </div>
+    )}
+
+</div>
