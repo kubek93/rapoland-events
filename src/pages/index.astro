@@ -1,10 +1,13 @@
 ---
 // src/pages/index.astro
-import { Image } from 'astro:assets';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale/pl';
+import NewsScrollSection from '../components/NewsScrollSection.jsx';
 
-// Pobieranie wydarzeń z Decap CMS
+// Pobieranie danych strony głównej
+const homepageFiles = await Astro.glob('../content/homepage/*.md');
+const homepage = homepageFiles.length > 0 ? homepageFiles[0].frontmatter : {};
+
 const newsFiles = await Astro.glob('../content/news/*.md');
 const news = newsFiles.map(event => {
   return {
@@ -13,8 +16,8 @@ const news = newsFiles.map(event => {
     slug: event.file.split('/').pop().split('.').shift()
   }
 })
-.sort((a, b) => b.date - a.date)
-.slice(0, 20);
+.sort((a, b) => b.date - a.date);
+// .slice(0, 20);
 
 const eventFiles = await Astro.glob('../content/events/*.md');
 const events = eventFiles.map(event => {
@@ -97,13 +100,10 @@ const formatDate = (date) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wydarzenia | Kalendarz Imprez</title>
+  <title>{homepage.page_title}</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <script>
-    tailwind.config = JSON.parse(`---${JSON.stringify(tailwindConfig.theme)}---`);
-  </script>
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -219,11 +219,7 @@ const formatDate = (date) => {
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
           <div class="w-full md:mb-0 text-center">
               <h2 class="text-4xl md:text-5xl font-bold mb-4">Najświeższe <span class="text-gradient">wydarzenia muzyczne</span></h2>
-              <p class="text-lg text-gray-300">Bądź na bieżąco z koncertami, festiwalami i premierami w polskiej scenie rapowej.</p>
-              <!-- <div class="flex flex-wrap gap-3">
-                  <button class="bg-primary px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition">Zobacz nadchodzące wydarzenia</button>
-                  <button class="bg-white text-dark px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition">Zapisz się do newslettera</button>
-              </div> -->
+              <p class="text-lg text-gray-300">{homepage.header}</p>
           </div>
           <!-- <div class="md:w-1/2 flex justify-center">
               <div class="relative">
@@ -236,90 +232,21 @@ const formatDate = (date) => {
     </section>
 
     <!-- Sekcja z przewijanymi aktualnościami -->
-    <section class="py-12 bg-underground street-border">
-        <div class="container mx-auto px-4">
-            <!-- <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bebas text-white underground-text"><span class="text-graffiti">ULICZNE</span> AKTUALNOŚCI</h2>
-                <a href="#" class="text-primary font-medium flex items-center">
-                    Więcej aktualności <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-            </div> -->
+     <div class="mt-12 mb-3">
+        <NewsScrollSection
+          description="Co słychać w holenderskim świecie hip-hopu"
+          news={news.filter(({category}) => category !== 'interview')}
+          title="Uliczne aktualności"
+        />
+    </div>
 
-            <div class="flex justify-between items-center mb-8">
-            <div>
-              <h2 class="text-3xl font-heading font-bold text-white">Uliczne aktualności</h2>
-              <p class="text-blue-300 text-md mt-2">Co słychać w holenderskim świecie hip-hopu</p>
-            </div>
-            <div class="flex items-center space-x-4">
-               <a href="#" class="text-primary font-medium flex items-center hover:text-red-500">
-                  Zobacz wszystkie <i class="fas fa-arrow-right ml-2"></i>
-              </a>
-            </div>
-          </div>
-
-            <div class="news-scroll-container flex overflow-x-auto pb-6 space-x-4">
-                <!-- News Card 1 -->
-
-                {news.map(newsItem => (
-                  <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
-                      {newsItem.thumbnail ? (
-                        <div class="h-40 relative">
-                          <img
-                            src={newsItem.thumbnail}
-                            alt={newsItem.title}
-                            class="w-full h-full object-cover"
-                            style="min-height: 10rem; max-height: 10rem;"
-                          />
-                          <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
-                        </div>
-                      ) : (
-                        <div class="h-40 bg-gradient-to-r from-purple-900 to-purple-700 relative">
-                          <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
-                        </div>
-                      )}
-                      <div class="p-5">
-                          <span class="text-sm text-primary font-medium">{newsItem.category}</span>
-                          <h3 class="text-xl font-bold my-3 text-white">{newsItem.title}</h3>
-                          <p class="text-gray-400 mb-4">
-                            {newsItem.short_description.slice(0, 80) + '...'}
-                          </p>
-                          <div class="flex items-center text-gray-500">
-                              <i class="far fa-clock mr-2"></i>
-                                <span>
-                                {(() => {
-                                  const now = new Date();
-                                  const date = new Date(newsItem.date);
-                                  const diffMs = now - date;
-                                  const diffSec = Math.floor(diffMs / 1000);
-                                  const diffMin = Math.floor(diffSec / 60);
-                                  const diffHour = Math.floor(diffMin / 60);
-                                  const diffDay = Math.floor(diffHour / 24);
-
-                                  if (diffDay === 0) {
-                                  if (diffHour === 0) {
-                                    if (diffMin < 2) return 'przed chwilą';
-                                    if (diffMin < 60) return `dzisiaj, ${diffMin} min temu`;
-                                    return `dzisiaj, ${diffHour} godz temu`;
-                                  }
-                                  return `dzisiaj, ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                                  }
-                                  if (diffDay === 1) {
-                                  return `wczoraj, ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                                  }
-                                  if (diffDay < 7) {
-                                  return `${diffDay} dni temu`;
-                                  }
-                                  // Fallback to formatted date
-                                  return formatDate(date);
-                                })()}
-                                </span>
-                          </div>
-                      </div>
-                  </div>
-                ))};
-            </div>
-        </div>
-    </section>
+      <div class="mt-12 mb-3">
+        <NewsScrollSection
+            description="Poznaj bliżej twórców polskiej sceny hip-hopowej w Holandii"
+            news={news.filter(({category}) => category === 'interview')}
+            title="Wywiady z artystami"
+        />
+     </div>
 
     {events.length > 0 ? (
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -430,83 +357,99 @@ const formatDate = (date) => {
         <!-- Panel boczny -->
         <div class="lg:col-span-1 space-y-8">
 
-            <div class="bg-gray-800 rounded-xl p-5 mb-6">
-              <h3 class="text-xl font-bold mb-4 text-white text-center">KALENDARZ</h3>
-              <div class="bg-gray-900 rounded-lg p-4">
-                  <div class="text-center mb-4">
-                      <span class="text-xl font-bold text-white">LISTOPAD 2023</span>
-                  </div>
-                  <div class="grid grid-cols-7 gap-2 mb-2">
-                      <div class="text-center text-gray-500">Pn</div>
-                      <div class="text-center text-gray-500">Wt</div>
-                      <div class="text-center text-gray-500">Śr</div>
-                      <div class="text-center text-gray-500">Cz</div>
-                      <div class="text-center text-gray-500">Pt</div>
-                      <div class="text-center text-gray-500">So</div>
-                      <div class="text-center text-gray-500">Nd</div>
-                  </div>
-                  <div class="grid grid-cols-7 gap-2">
-                      <div class="text-center py-1 text-gray-600">30</div>
-                      <div class="text-center py-1 text-gray-600">31</div>
-                      <div class="text-center py-1">1</div>
-                      <div class="text-center py-1">2</div>
-                      <div class="text-center py-1">3</div>
-                      <div class="text-center py-1">4</div>
-                      <div class="text-center py-1">5</div>
-                      <div class="text-center py-1">6</div>
-                      <div class="text-center py-1">7</div>
-                      <div class="text-center py-1">8</div>
-                      <div class="text-center py-1">9</div>
-                      <div class="text-center py-1">10</div>
-                      <div class="text-center py-1">11</div>
-                      <div class="text-center py-1">12</div>
-                      <div class="text-center py-1">13</div>
-                      <div class="text-center py-1">14</div>
-                      <div class="text-center py-1">15</div>
-                      <div class="text-center py-1 bg-primary rounded-full text-white">16</div>
-                      <div class="text-center py-1">17</div>
-                      <div class="text-center py-1">18</div>
-                      <div class="text-center py-1">19</div>
-                      <div class="text-center py-1">20</div>
-                      <div class="text-center py-1">21</div>
-                      <div class="text-center py-1 bg-accent rounded-full text-dark font-bold">22</div>
-                      <div class="text-center py-1">23</div>
-                      <div class="text-center py-1">24</div>
-                      <div class="text-center py-1">25</div>
-                      <div class="text-center py-1">26</div>
-                      <div class="text-center py-1">27</div>
-                      <div class="text-center py-1">28</div>
-                      <div class="text-center py-1">29</div>
-                      <div class="text-center py-1">30</div>
-                      <div class="text-center py-1 text-gray-600">1</div>
-                  </div>
-                  <div class="mt-4">
-                      <div class="flex items-center mb-2">
-                          <div class="w-4 h-4 bg-primary rounded-full mr-2"></div>
-                          <span class="text-sm text-gray-300">Bitwa freestyle</span>
-                      </div>
-                      <div class="flex items-center">
-                          <div class="w-4 h-4 bg-accent rounded-full mr-2"></div>
-                          <span class="text-sm text-gray-300">Koncert</span>
-                      </div>
-                  </div>
-              </div>
+          <div class="bg-gray-800 rounded-xl p-5 mb-6">
+            <h3 class="text-xl font-bold mb-4 text-white text-center">KALENDARZ</h3>
+            <div class="bg-gray-900 rounded-lg p-4">
+                <div class="text-center mb-4">
+                    <span class="text-xl font-bold text-white">LISTOPAD 2023</span>
+                </div>
+                <div class="grid grid-cols-7 gap-2 mb-2">
+                    <div class="text-center text-gray-500">Pn</div>
+                    <div class="text-center text-gray-500">Wt</div>
+                    <div class="text-center text-gray-500">Śr</div>
+                    <div class="text-center text-gray-500">Cz</div>
+                    <div class="text-center text-gray-500">Pt</div>
+                    <div class="text-center text-gray-500">So</div>
+                    <div class="text-center text-gray-500">Nd</div>
+                </div>
+                <div class="grid grid-cols-7 gap-2">
+                    <div class="text-center py-1 text-gray-600">30</div>
+                    <div class="text-center py-1 text-gray-600">31</div>
+                    <div class="text-center py-1">1</div>
+                    <div class="text-center py-1">2</div>
+                    <div class="text-center py-1">3</div>
+                    <div class="text-center py-1">4</div>
+                    <div class="text-center py-1">5</div>
+                    <div class="text-center py-1">6</div>
+                    <div class="text-center py-1">7</div>
+                    <div class="text-center py-1">8</div>
+                    <div class="text-center py-1">9</div>
+                    <div class="text-center py-1">10</div>
+                    <div class="text-center py-1">11</div>
+                    <div class="text-center py-1">12</div>
+                    <div class="text-center py-1">13</div>
+                    <div class="text-center py-1">14</div>
+                    <div class="text-center py-1">15</div>
+                    <div class="text-center py-1 bg-primary rounded-full text-white">16</div>
+                    <div class="text-center py-1">17</div>
+                    <div class="text-center py-1">18</div>
+                    <div class="text-center py-1">19</div>
+                    <div class="text-center py-1">20</div>
+                    <div class="text-center py-1">21</div>
+                    <div class="text-center py-1 bg-accent rounded-full text-dark font-bold">22</div>
+                    <div class="text-center py-1">23</div>
+                    <div class="text-center py-1">24</div>
+                    <div class="text-center py-1">25</div>
+                    <div class="text-center py-1">26</div>
+                    <div class="text-center py-1">27</div>
+                    <div class="text-center py-1">28</div>
+                    <div class="text-center py-1">29</div>
+                    <div class="text-center py-1">30</div>
+                    <div class="text-center py-1 text-gray-600">1</div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex items-center mb-2">
+                        <div class="w-4 h-4 bg-primary rounded-full mr-2"></div>
+                        <span class="text-sm text-gray-300">Bitwa freestyle</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-accent rounded-full mr-2"></div>
+                        <span class="text-sm text-gray-300">Koncert</span>
+                    </div>
+                </div>
+            </div>
           </div>
 
-
-          <!-- Mapa wydarzeń -->
-          {/* {events.length > 0 && events[0].google_maps_url && (
-            <div class="glass-card animate-fade-in p-6">
-              <h3 class="font-heading font-semibold text-xl mb-4">Najbliższe wydarzenie</h3>
-              <div class="map-container">
-                <iframe
-                  src={events[0].google_maps_url.replace('/place/', '/embed/')}
-                  allowFullScreen
-                  loading="lazy"
-                ></iframe>
+          {homepage.partners?.length > 0 && (
+            <div class="bg-gradient-to-r from-blue-900 to-blue-700 rounded-xl p-5 mb-6">
+              <h3 class="text-xl font-bold mb-4 text-white text-center">NASI PARTNERZY</h3>
+              <div class="rounded-lg p-4">
+                <div class="grid gap-2">
+                  {homepage.partners.map(({image, title, url}) => (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      key={title}
+                      class="group text-center glass-card bg-opacity-60 rounded-lg p-3 transition-all hover:bg-opacity-80"
+                    >
+                      <img
+                        src={image}
+                        alt={`Partner ${title} logo`}
+                        class="w-full mb-2 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
+                      />
+                      <span class="text-white font-medium text-center group-hover:text-blue-300 transition-colors">
+                        {title}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+                <button class="w-full bg-blue-600 text-white py-2 rounded-lg mt-4 hover:bg-blue-500 transition">
+                  <i class="fas fa-handshake mr-2"></i> Zostań partnerem
+                </button>
               </div>
             </div>
-          )} */}
+          )}
 
           {events.length > 0 && (
             <div class="bg-gray-800 rounded-xl p-5 mb-6">
@@ -562,71 +505,72 @@ const formatDate = (date) => {
   </main>
 
   <!-- Stopka -->
-    <footer class="bg-gray-900 text-white py-12 street-border">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="bg-primary p-2 rounded-lg">
-                            <i class="fas fa-microphone-alt text-white text-xl"></i>
-                        </div>
-                        <h2 class="text-2xl font-bebas">RAP<span class="text-graffiti">OLAND</span></h2>
-                    </div>
-                    <p class="text-gray-400 mb-4">Największy holenderski portal z wydarzeniami i aktualnościami polskiej sceny undergroundowej.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook-f text-xl"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram text-xl"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-youtube text-xl"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-tiktok text-xl"></i></a>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Szybkie linki</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Strona główna</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Wydarzenia</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Aktualności</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Artyści</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Kontakt</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Kategorie</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Bitwy freestyle</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Koncerty klubowe</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Warsztaty</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Jam session</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Turnieje taneczne</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Kontakt</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
-                            <span>ul. Podziemna 15, 00-001 Warszawa</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-phone-alt mt-1 mr-3 text-primary"></i>
-                            <span>+48 123 456 789</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
-                            <span>info@rapounderground.pl</span>
-                        </li>
-                    </ul>
-                </div>
+  <footer class="bg-gray-900 text-white py-12 street-border">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="bg-primary p-2 rounded-lg">
+              <i class="fas fa-microphone-alt text-white text-xl"></i>
             </div>
-
-            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
-                <p>&copy; 2025 Rapoland.nl</p>
-            </div>
+            <h2 class="text-2xl font-bebas">RAP<span class="text-graffiti">OLAND</span></h2>
+          </div>
+          <p class="text-gray-400 mb-4">Największy holenderski portal z wydarzeniami i aktualnościami polskiej sceny undergroundowej.</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-youtube text-xl"></i></a>
+            <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-tiktok text-xl"></i></a>
+          </div>
         </div>
-    </footer>
+
+        <div>
+          <h3 class="text-lg font-bold mb-4">Szybkie linki</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Strona główna</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Wydarzenia</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Aktualności</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Artyści</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Kontakt</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold mb-4">Kategorie</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Bitwy freestyle</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Koncerty klubowe</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Warsztaty</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Jam session</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition">Turnieje taneczne</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold mb-4">Kontakt</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-start">
+              <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+              <span>ul. Podziemna 15, 00-001 Warszawa</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-phone-alt mt-1 mr-3 text-primary"></i>
+              <span>+48 123 456 789</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
+              <span>info@rapounderground.pl</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
+        <p>&copy; 2025 Rapoland.nl</p>
+      </div>
+    </div>
+  </footer>
+
 
   <script>
     // Obsługa mapy
