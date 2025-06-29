@@ -4,6 +4,6 @@ header: Bądź na bieżąco z koncertami, festiwalami i premierami w polskiej sc
   rapowej
 partners:
   - title: J&D Video Production
-    image: /images/uploads/logo-jd-video-production-300x300.jpg
+    image: /images/uploads/logo-jd-video-2.png
     url: https://www.facebook.com/JandD.VideoProductions/
 ---
