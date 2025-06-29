@@ -1,0 +1,145 @@
+---
+import { format } from 'date-fns';
+import { pl } from 'date-fns/locale/pl';
+
+const { events } = Astro.props;
+import Sidebar from './Sidebar.astro';
+
+const formatDate = (date) => {
+  console.log('Formatting date:', date);
+  return date ? format(date, 'd MMMM yyyy, HH:mm', { locale: pl }) : '';;
+};
+---
+
+<div>
+    {events.length > 0 ? (
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Lista wydarzeń -->
+        <div class="lg:col-span-2">
+          <div class="flex justify-between items-center mb-8">
+            <div>
+              <h2 class="text-3xl font-heading font-bold text-white">Nadchodzące Wydarzenia</h2>
+              <p class="text-blue-300 text-md mt-2">Gdzie się widzimy?</p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <div class="text-sm bg-blue-900/30 px-4 py-2 rounded-full">
+                {events.length} {events.length === 1 ? 'wydarzenie' : 'wydarzeń'}
+              </div>
+               <a href="#" class="text-primary font-medium flex items-center hover:text-red-500">
+                  Zobacz wszystkie <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Karty wydarzeń -->
+          <div class="space-y-6">
+            {events.map(event => (
+              <article class="glass-card event-card overflow-hidden animate-fade-in">
+                <div class="flex flex-col md:flex-row">
+                  <div class="md:w-2/5 relative">
+                    {event.thumbnail && (
+                      <img
+                        src={event.thumbnail}
+                        alt={event.title}
+                        // class="w-full h-full object-cover min-h-[200px]"
+                        class="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105 hover:max-h-[14rem]"
+                        style="min-height: 10rem; max-height: 14rem;"
+                      />
+                    )}
+                    <div class="absolute bottom-4 left-4">
+                      <div class="date-badge bg-blue-900/80 text-white px-4 py-2 rounded-lg">
+                        <div class="text-xl font-bold">
+                          {format(event.startDate, 'd', { locale: pl })}
+                        </div>
+                        <div class="text-sm uppercase">
+                          {format(event.startDate, 'MMM', { locale: pl })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Informacje o wydarzeniu -->
+                  <div class="md:w-3/5 p-6">
+                    <h3 class="text-xl font-heading font-bold text-white">{event.title}</h3>
+
+                    <div class="mt-4 flex items-center text-blue-200">
+                      <i class="far fa-clock mr-2 text-blue-400"></i>
+                      <span>{formatDate(event.startDate)}</span>
+                    </div>
+
+                    {event.location && (
+                      <div class="mt-3 flex items-center text-blue-200">
+                        <i class="fas fa-map-marker-alt mr-2 text-blue-400"></i>
+                        <span>{event.location}</span>
+                      </div>
+                    )}
+
+                    {event.short_description && (
+                      <p class="mt-4 text-blue-300">{event.short_description.slice(0, 200) + '...'}</p>
+                    )}
+
+                    <div class="mt-6 flex flex-wrap gap-3">
+                      {event.tickets_url && (
+                        <a
+                          href={event.tickets_url}
+                          target="_blank"
+                          class="gradient-bg hover:opacity-90 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md inline-flex items-center"
+                        >
+                          <i class="fas fa-ticket-alt mr-2"></i>Kup Bilet
+                        </a>
+                      )}
+
+                      {event.google_maps_url && (
+                        <a
+                          href={event.google_maps_url}
+                          target="_blank"
+                          class="bg-blue-900 hover:bg-blue-800 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md inline-flex items-center"
+                        >
+                          <i class="fas fa-map-marked-alt mr-2"></i>Mapa
+                        </a>
+                      )}
+
+                      {event.google_maps_url && (
+                        <a
+                          href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${format(event.startDate, 'yyyyMMdd\'T\'HHmmss')}%2F${format(new Date(event.startDate.getTime() + 2*60*60*1000), 'yyyyMMdd\'T\'HHmmss')}&text=${encodeURIComponent(event.title)}&location=${encodeURIComponent(event.location || '')}`}
+                          target="_blank"
+                          class="bg-gray-800 hover:bg-gray-700 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md inline-flex items-center"
+                        >
+                          <i class="far fa-calendar-plus mr-2"></i>Dodaj do kalendarza
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+        </div>
+
+        <Sidebar events={events} />
+
+
+
+      </div>
+    ) : (
+      <div class="text-center py-20">
+        <div class="glass-card max-w-2xl mx-auto p-12">
+          <i class="fas fa-calendar-times text-6xl text-blue-500 mb-6"></i>
+          <h2 class="text-3xl font-heading font-bold text-white mb-4">Brak nadchodzących wydarzeń</h2>
+          <p class="text-blue-300 mb-8">
+            Aktualnie nie mamy żadnych nadchodzących wydarzeń w naszym kalendarzu.
+            Sprawdź później lub dodaj własne wydarzenie.
+          </p>
+          <a
+            href="/admin/"
+            class="gradient-bg hover:opacity-90 text-white px-8 py-3 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl inline-flex items-center"
+          >
+            <i class="fas fa-plus mr-2"></i>Dodaj Wydarzenie
+          </a>
+        </div>
+      </div>
+    )}
+
+</div>
