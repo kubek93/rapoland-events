@@ -1,0 +1,40 @@
+---
+// src/components/Nav.astro
+---
+
+<nav class="navbar sticky bg-blue-950 top-0 z-50">
+  <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center py-3">
+          <!-- Logo -->
+          <div class="flex items-center">
+            <a href="/" class="nav-link text-white-700 hover:text-red-500 font-medium">
+              <img class="h-12" src="https://www.rapoland.nl/back/wp-content/themes/revelio/images/logo.png" alt="Rapoland.nl logo" />
+            </a>
+          </div>
+
+          <!-- Linki desktop -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="/" class="nav-link text-white-700 hover:text-red-500 font-medium">Aktualności</a>
+            <a href="/wydarzenia" class="nav-link text-white-700 hover:text-red-500 font-medium active">Wydarzenia</a>
+            <a href="/kontakt" class="nav-link text-white-700 hover:text-red-500 font-medium">Kontakt</a>
+          </div>
+
+          <!-- Przycisk mobilny -->
+          <button id="mobile-menu-button" class="md:hidden text-gray-600 focus:outline-none">
+              <i class="fas fa-bars text-2xl hamburger"></i>
+          </button>
+      </div>
+
+      <!-- Menu mobilne -->
+      <div id="mobile-menu" class="mobile-menu md:hidden">
+          <div class="flex flex-col space-y-4 pb-4">
+              <a href="#wydarzenia" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Wydarzenia</a>
+              <a href="#aktualnosci" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Aktualności</a>
+              <a href="#kontakt" class="nav-link text-gray-700 hover:text-blue-500 font-medium py-2 border-b border-gray-100">Kontakt</a>
+              <a href="#" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2 rounded-lg font-medium text-center shadow-md">
+                  <i class="fas fa-user mr-2"></i>Logowanie
+              </a>
+          </div>
+      </div>
+  </div>
+</nav>
