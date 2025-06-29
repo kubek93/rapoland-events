@@ -3,6 +3,7 @@
 import { Image } from 'astro:assets';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale/pl';
+import NewsScroll from '../components/NewsScroll.astro';
 
 // Pobieranie wydarzeń z Decap CMS
 const newsFiles = await Astro.glob('../content/news/*.md');
@@ -235,91 +236,8 @@ const formatDate = (date) => {
       </div>
     </section>
 
-    <!-- Sekcja z przewijanymi aktualnościami -->
-    <section class="py-12 bg-underground street-border">
-        <div class="container mx-auto px-4">
-            <!-- <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bebas text-white underground-text"><span class="text-graffiti">ULICZNE</span> AKTUALNOŚCI</h2>
-                <a href="#" class="text-primary font-medium flex items-center">
-                    Więcej aktualności <i class="fas fa-arrow-right ml-2"></i>
-                </a>
-            </div> -->
-
-            <div class="flex justify-between items-center mb-8">
-            <div>
-              <h2 class="text-3xl font-heading font-bold text-white">Uliczne aktualności</h2>
-              <p class="text-blue-300 text-md mt-2">Co słychać w holenderskim świecie hip-hopu</p>
-            </div>
-            <div class="flex items-center space-x-4">
-               <a href="#" class="text-primary font-medium flex items-center hover:text-red-500">
-                  Zobacz wszystkie <i class="fas fa-arrow-right ml-2"></i>
-              </a>
-            </div>
-          </div>
-
-            <div class="news-scroll-container flex overflow-x-auto pb-6 space-x-4">
-                <!-- News Card 1 -->
-
-                {news.map(newsItem => (
-                  <div class="flex-shrink-0 w-80 bg-gray-900 rounded-xl overflow-hidden card-hover">
-                      {newsItem.thumbnail ? (
-                        <div class="h-40 relative">
-                          <img
-                            src={newsItem.thumbnail}
-                            alt={newsItem.title}
-                            class="w-full h-full object-cover"
-                            style="min-height: 10rem; max-height: 10rem;"
-                          />
-                          <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
-                        </div>
-                      ) : (
-                        <div class="h-40 bg-gradient-to-r from-purple-900 to-purple-700 relative">
-                          <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
-                        </div>
-                      )}
-                      <div class="p-5">
-                          <span class="text-sm text-primary font-medium">{newsItem.category}</span>
-                          <h3 class="text-xl font-bold my-3 text-white">{newsItem.title}</h3>
-                          <p class="text-gray-400 mb-4">
-                            {newsItem.short_description.slice(0, 80) + '...'}
-                          </p>
-                          <div class="flex items-center text-gray-500">
-                              <i class="far fa-clock mr-2"></i>
-                                <span>
-                                {(() => {
-                                  const now = new Date();
-                                  const date = new Date(newsItem.date);
-                                  const diffMs = now - date;
-                                  const diffSec = Math.floor(diffMs / 1000);
-                                  const diffMin = Math.floor(diffSec / 60);
-                                  const diffHour = Math.floor(diffMin / 60);
-                                  const diffDay = Math.floor(diffHour / 24);
-
-                                  if (diffDay === 0) {
-                                  if (diffHour === 0) {
-                                    if (diffMin < 2) return 'przed chwilą';
-                                    if (diffMin < 60) return `dzisiaj, ${diffMin} min temu`;
-                                    return `dzisiaj, ${diffHour} godz temu`;
-                                  }
-                                  return `dzisiaj, ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                                  }
-                                  if (diffDay === 1) {
-                                  return `wczoraj, ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-                                  }
-                                  if (diffDay < 7) {
-                                  return `${diffDay} dni temu`;
-                                  }
-                                  // Fallback to formatted date
-                                  return formatDate(date);
-                                })()}
-                                </span>
-                          </div>
-                      </div>
-                  </div>
-                ))};
-            </div>
-        </div>
-    </section>
+    <NewsScroll title="Uliczne aktualności" description="Co słychać w holenderskim świecie hip-hopu" news={news.filter(({category}) => category !== 'interview')} />
+    <NewsScroll title="Wywiady z artystami" description="Poznaj bliżej twórców polskiej sceny hip-hopowej w Holandii" news={news.filter(({category}) => category === 'interview')} />
 
     {events.length > 0 ? (
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -572,6 +490,89 @@ const formatDate = (date) => {
                         </div>
                         <h2 class="text-2xl font-bebas">RAP<span class="text-graffiti">OLAND</span></h2>
                     </div>
+                    <p class="text-gray-400 mb-4">Największy holenderski portal z wydarzeniami i aktualnościami polskiej sceny undergroundowej.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-youtube text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-tiktok text-xl"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Szybkie linki</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Strona główna</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Wydarzenia</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Aktualności</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Artyści</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Kontakt</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Kategorie</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Bitwy freestyle</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Koncerty klubowe</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Warsztaty</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Jam session</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition">Turnieje taneczne</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Kontakt</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                            <span>ul. Podziemna 15, 00-001 Warszawa</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-primary"></i>
+                            <span>+48 123 456 789</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
+                            <span>info@rapounderground.pl</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 Rapoland.nl</p>
+            </div>
+        </div>
+    </footer>
+
+  <script>
+    // Obsługa mapy
+    document.querySelectorAll('.map-container iframe').forEach(iframe => {
+      iframe.onload = function() {
+        iframe.style.opacity = 1;
+      };
+      iframe.style.opacity = 0;
+      iframe.style.transition = 'opacity 0.5s ease-in-out';
+    });
+
+    // Animacje przycisków
+    document.querySelectorAll('a, button').forEach(btn => {
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform = 'scale(0.98)';
+      });
+
+      btn.addEventListener('mouseup', () => {
+        btn.style.transform = '';
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  </script>
+</body>
+</html>
                     <p class="text-gray-400 mb-4">Największy holenderski portal z wydarzeniami i aktualnościami polskiej sceny undergroundowej.</p>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook-f text-xl"></i></a>
