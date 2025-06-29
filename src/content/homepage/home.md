@@ -1,11 +1,9 @@
 ---
-page_title: "Rapoland - Najlepsze wydarzenia hip-hopowe w Polsce"
-header: "Witamy na stronie głównej Rapoland!"
+page_title: Rapoland.nl - najlepsze źródło o polskim hip-hopie w Holandii
+header: Bądź na bieżąco z koncertami, festiwalami i premierami w polskiej scenie
+  rapowej
 partners:
-  - title: "Partner 1"
-    image: "/images/uploads/partner1.png"
-    url: "https://partner1.pl"
-  - title: "Partner 2"
-    image: "/images/uploads/partner2.png"
-    url: "https://partner2.pl"
+  - title: J&D Video Production
+    image: /images/uploads/logo-jd-video-production-300x300.jpg
+    url: https://www.facebook.com/JandD.VideoProductions/
 ---
