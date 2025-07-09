@@ -4,7 +4,6 @@ import NewsScroll from '../components/NewsScroll.astro';
 import Events from '../components/Events.astro';
 import EventCard from '../components/EventCard.astro';
 
-// Pobieranie wydarzeń z Decap CMS
 const newsFiles = await Astro.glob('../content/news/*.md');
 const news = newsFiles.map(event => {
   return {
@@ -13,8 +12,8 @@ const news = newsFiles.map(event => {
     slug: event.file.split('/').pop().split('.').shift()
   }
 })
-.sort((a, b) => b.date - a.date)
-.slice(0, 20);
+.sort((a, b) => b.date - a.date);
+// .slice(0, 20);
 
 console.log('news', news);
 
