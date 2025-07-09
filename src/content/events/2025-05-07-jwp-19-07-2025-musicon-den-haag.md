@@ -17,8 +17,9 @@ description: |-
   20:00
   Bilety: https://artstagepromotion.stager.co/web/tickets/111528989
   Ero, Kosi, Łajzol i Siwers zaprezentują pełnowymiarowy koncert, na którym nie zabraknie ich największych hitów warszawskiej ekipy!
-start_date: "2025-05-07 18:55:13"
+start_date: "2025-08-07 18:55:13"
 thumbnail: "/images/uploads/dd906505-f8f8-40e3-ab46-ac3607fd6708.jpeg"
 published: true
+google_maps_url: https://www.google.com/maps
 tags: []
 ---

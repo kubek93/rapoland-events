@@ -5,6 +5,7 @@ const { item, file } = Astro.props;
 const dateObj = new Date(item.date || '1970-01-01');
 const dateStr = dateObj.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
 const timeStr = item.time ? `, ${item.time}` : '';
+console.log('file', file);
 ---
 <div class="bg-gray-900 rounded-xl glass-card event-card animate-fade-in flex flex-col h-full">
   <div class="h-40 relative">

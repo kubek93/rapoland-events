@@ -3,6 +3,7 @@
 
 import { format } from "date-fns";
 import { pl } from "date-fns/locale/pl";
+import Calendar from "./Calendar.astro";
 
 const eventFiles = await Astro.glob('../content/events/*.md');
 const events = eventFiles.map(event => {
@@ -12,90 +13,12 @@ const events = eventFiles.map(event => {
     slug: event.file.split('/').pop().split('.').shift()
   }
 })
-// .filter(event => event.startDate >= new Date())
-.sort((a, b) => b.startDate - a.startDate);
-// .slice(0, 10);
+.sort((a, b) => a.startDate - b.startDate)
+.filter(event => !isNaN(event.startDate.getTime()) && event.startDate >= new Date());
 ---
 
 <div >
-  <div class="bg-gray-800 rounded-xl p-5 mb-6">
-    <h3 class="text-xl font-bold mb-4 text-white text-center">KALENDARZ</h3>
-    <div class="bg-gray-900 rounded-lg p-4">
-      <div class="text-center mb-4">
-        <span class="text-xl font-bold text-white">LISTOPAD 2023</span>
-      </div>
-      <div class="grid grid-cols-7 gap-2 mb-2">
-        <div class="text-center text-gray-500">Pn</div>
-        <div class="text-center text-gray-500">Wt</div>
-        <div class="text-center text-gray-500">Śr</div>
-        <div class="text-center text-gray-500">Cz</div>
-        <div class="text-center text-gray-500">Pt</div>
-        <div class="text-center text-gray-500">So</div>
-        <div class="text-center text-gray-500">Nd</div>
-      </div>
-      <div class="grid grid-cols-7 gap-2">
-        <div class="text-center py-1 text-gray-600">30</div>
-        <div class="text-center py-1 text-gray-600">31</div>
-        <div class="text-center py-1">1</div>
-        <div class="text-center py-1">2</div>
-        <div class="text-center py-1">3</div>
-        <div class="text-center py-1">4</div>
-        <div class="text-center py-1">5</div>
-        <div class="text-center py-1">6</div>
-        <div class="text-center py-1">7</div>
-        <div class="text-center py-1">8</div>
-        <div class="text-center py-1">9</div>
-        <div class="text-center py-1">10</div>
-        <div class="text-center py-1">11</div>
-        <div class="text-center py-1">12</div>
-        <div class="text-center py-1">13</div>
-        <div class="text-center py-1">14</div>
-        <div class="text-center py-1">15</div>
-        <div class="text-center py-1 bg-primary rounded-full text-white">16</div>
-        <div class="text-center py-1">17</div>
-        <div class="text-center py-1">18</div>
-        <div class="text-center py-1">19</div>
-        <div class="text-center py-1">20</div>
-        <div class="text-center py-1">21</div>
-        <div class="text-center py-1 bg-accent rounded-full text-dark font-bold">22</div>
-        <div class="text-center py-1">23</div>
-        <div class="text-center py-1">24</div>
-        <div class="text-center py-1">25</div>
-        <div class="text-center py-1">26</div>
-        <div class="text-center py-1">27</div>
-        <div class="text-center py-1">28</div>
-        <div class="text-center py-1">29</div>
-        <div class="text-center py-1">30</div>
-        <div class="text-center py-1 text-gray-600">1</div>
-      </div>
-      <div class="mt-4">
-        <div class="flex items-center mb-2">
-          <div class="w-4 h-4 bg-primary rounded-full mr-2"></div>
-          <span class="text-sm text-gray-300">Bitwa freestyle</span>
-        </div>
-        <div class="flex items-center">
-          <div class="w-4 h-4 bg-accent rounded-full mr-2"></div>
-          <span class="text-sm text-gray-300">Koncert</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mapa wydarzeń -->
-  {
-    /* {events.length > 0 && events[0].google_maps_url && (
-            <div class="glass-card animate-fade-in p-6">
-              <h3 class="font-heading font-semibold text-xl mb-4">Najbliższe wydarzenie</h3>
-              <div class="map-container">
-                <iframe
-                  src={events[0].google_maps_url.replace('/place/', '/embed/')}
-                  allowFullScreen
-                  loading="lazy"
-                ></iframe>
-              </div>
-            </div>
-          )} */
-  }
+  <!-- <Calendar /> -->
 
   {
     events.length > 0 && (
@@ -108,14 +31,22 @@ const events = eventFiles.map(event => {
             <i class="fas fa-map-marker-alt mr-2" /> {events[0].location || "Nieznazna"}
           </p>
           <p class="text-gray-300 mb-4">
-            <i class="far fa-clock mr-2" /> Start: {format(new Date(events[0].startDate), "HH:mm:ss", { locale: pl })}
+            <i class="far fa-clock mr-2" /> Start: {format(new Date(events[0].startDate), "yyyy-MM-dd HH:mm:ss", { locale: pl })}
           </p>
-          <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-opacity-90 transition">
-            <i class="fas fa-ticket-alt mr-2" /> Kup bilet
-          </button>
-          <button class="w-full bg-gray-700 text-white py-2 rounded-lg mt-2 hover:bg-gray-600 transition">
-            <i class="fas fa-map-marker-alt mr-2" /> Pokaż na mapie
-          </button>
+          {events[0].tickets_url && (
+            <a href={events[0].tickets_url} class="w-full bg-gray-700 text-white py-2 rounded-lg mt-2 hover:bg-gray-600 transition" target="_blank" rel="noopener noreferrer">
+              <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-opacity-90 transition cursor-pointer">
+                <i class="fas fa-ticket-alt mr-2" /> Kup bilet
+              </button>
+            </a>
+          )}
+          {events[0].google_maps_url && (
+            <a href={events[0].google_maps_url} class="w-full bg-gray-700 text-white py-2 rounded-lg mt-2 hover:bg-gray-600 transition" target="_blank" rel="noopener noreferrer">
+              <button class="w-full bg-gray-700 text-white py-2 rounded-lg mt-2 hover:bg-gray-600 transition cursor-pointer">
+                <i class="fas fa-map-marker-alt mr-2" /> Pokaż na mapie
+              </button>
+            </a>
+          )}
         </div>
       </div>
     )
@@ -124,11 +55,18 @@ const events = eventFiles.map(event => {
   <div class="glass-card animate-fade-in p-6 mb-6">
     <div class="grid grid-cols-2 gap-4">
       <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-        <div class="text-3xl font-bold text-indigo-300">24</div>
+        <div class="text-3xl font-bold text-indigo-300">{events.length}</div>
         <div class="text-sm text-indigo-400 mt-1">Nadchodzących wydarzeń</div>
       </div>
       <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-        <div class="text-3xl font-bold text-pink-300">2</div>
+        <div class="text-3xl font-bold text-pink-300">
+          {
+            events.filter(event => {
+              const now = new Date();
+              return event.startDate.getMonth() === now.getMonth() && event.startDate.getFullYear() === now.getFullYear();
+            }).length
+          }
+        </div>
         <div class="text-sm text-indigo-400 mt-1">W tym miesiącu</div>
       </div>
     </div>

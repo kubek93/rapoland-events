@@ -15,8 +15,10 @@ description: |-
   Data: 12.07.25
    Drzwi: 20:00
   Bilety : https://www.013.nl/programma/109003/polska-wersja
-start_date: "2025-05-11 20:00:00"
+start_date: "2025-07-11 20:00:00"
 thumbnail: "/images/uploads/8737e7a1-861f-4fd6-9a2d-63dd652a603e.jpeg"
+location: Tilburg
+google_maps_url: https://www.google.com/maps
 published: true
 tags: []
 ---
