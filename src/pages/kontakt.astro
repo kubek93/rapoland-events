@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
+
+const pageTitle = "Kontakt";
+const pageDescription = "Jesteśmy źródłem najnowszych informacji o polskim hip-hopie w Holandii. Informujemy o wydarzeniach, koncertach oraz premierach utworów lokalnych artystów i DJ-ów, dbając o to, aby żadna ważna wiadomość nie umknęła naszej społeczności.";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      <!-- DJ Contact Card -->
+      <div class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-purple-500/20 transition-all">
+        <div class="flex items-center mb-4">
+          <div class="bg-purple-600 p-3 rounded-full mr-4">
+            <i class="fas fa-envelope text-white text-2xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white">DJ Rasmatal</h3>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center">
+            <i class="fas fa-envelope text-purple-400 mr-3"></i>
+            <a href="mailto:rapoland.nl@gmail.com" class="text-gray-300 hover:text-purple-400 transition-colors">
+              rapoland.nl@gmail.com
+            </a>
+          </div>
+          <p class="text-gray-300 text-sm font-medium mt-5">
+            Napisz do nas maila w sprawie współpracy, koncertów lub nowych utworów.
+        </p>
+        </div>
+      </div>
+
+      <!-- Social Media Card -->
+      <div class="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-purple-500/20 transition-all">
+        <div class="flex items-center mb-6">
+          <div class="bg-purple-600 p-3 rounded-full mr-4">
+            <i class="fas fa-share-alt text-white text-2xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-white">Social Media</h3>
+        </div>
+        <div class="flex space-x-4 gap-3">
+          <a href="https://www.facebook.com/rapoland.nl" class="social-icon group" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-facebook-f text-3xl group-hover:text-blue-500 transition-colors"></i>
+            <span class="sr-only">Facebook</span>
+          </a>
+          <a href="https://www.instagram.com/rapoland.nl/" class="social-icon group" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-instagram text-3xl group-hover:text-pink-500 transition-colors"></i>
+            <span class="sr-only">Instagram</span>
+          </a>
+          <a href="https://www.youtube.com/channel/UC53kV1LclMmOeHCyRLgbB3w" class="social-icon group" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-youtube text-3xl group-hover:text-red-500 transition-colors"></i>
+            <span class="sr-only">YouTube</span>
+          </a>
+        </div>
+        <p class="text-gray-300 text-sm font-medium mt-5">
+            Dołącz do naszej społeczności! <span class="text-purple-400">Obserwuj nas</span> na Facebooku, Instagramie i YouTube, aby nie przegapić najnowszych wydarzeń, premier i relacji z koncertów.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-gray-800 rounded-xl p-6 border border-dashed border-purple-500/50 text-center">
+      <i class="fas fa-exclamation-triangle text-yellow-400 text-4xl mb-4"></i>
+      <p class="text-gray-400">
+        Formularz kontaktowy jest obecnie w budowie. Prosimy o kontakt mailowy.
+      </p>
+    </div>
+  </div>
+</Layout>

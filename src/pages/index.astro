@@ -8,10 +8,10 @@ const news = allNews
   .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
   .slice(0, 20);
 ---
-<Layout title="Najświeższe wydarzenia muzyczne" description="Bądź na bieżąco z wydarzeniami muzycznymi, koncertami i festiwalami w polskim hip-hopie w Holandii. Sprawdź najnowsze informacje i wywiady z artystami.">
-  <NewsScroll title="Uliczne aktualności" description="Co słychać w holenderskim świecie hip-hopu" news={news.filter(({frontmatter}) => frontmatter.category !== 'interview')} showAllUrl="/news" />
-  <NewsScroll title="Wywiady z artystami" description="Poznaj bliżej twórców polskiej sceny hip-hopowej w Holandii" news={news.filter(({frontmatter}) => frontmatter.category === 'interview')} showAllUrl="/news/?category=interview" />
-    <div class="lg:col-span-1 space-y-8">
+<Layout title="Polski hip-hop w Holandii" description="Przeglądaj najnowsze wiadomości, aktualności i wywiady związane z polskim hip-hopem. Bądź na bieżąco z wydarzeniami, premierami i opiniami artystów.">
+  <NewsScroll title="Aktualności" description="Najnowsze wiadomości i wydarzenia ze sceny hip-hopowej" news={news.filter(({frontmatter}) => frontmatter.category !== 'interview')} showAllUrl="/news" />
+  <NewsScroll title="Wywiady" description="Rozmowy z artystami i twórcami polskiego hip-hopu w Holandii" news={news.filter(({frontmatter}) => frontmatter.category === 'interview')} showAllUrl="/news/?category=interview" />
+  <div class="lg:col-span-1 space-y-8">
     <Events />
   </div>
 </Layout>
