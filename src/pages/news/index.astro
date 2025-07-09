@@ -3,89 +3,159 @@ import '../../styles/global.css';
 import Layout from '../../layouts/Layout.astro';
 import EventCard from '../../components/EventCard.astro';
 
-// Pobierz newsy z plików .md
-const allNews = await Astro.glob('../../content/news/*.md');
+export const prerender = false;
+
+export async function getStaticPaths() {
+    const categories = ['all', 'information', 'video', 'music', 'interview'];
+    const pages = [1, 2, 3, 4];
+
+    return categories.flatMap(category =>
+        pages.map(page => ({
+            params: { category, page: String(page) }
+        }))
+    )
+}
+
+// Get news sorted by date
+const allNews = (await Astro.glob('../../content/news/*.md'))
+  .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
+
 const categories = [
-    { label: 'Wszystkie', value: 'all' },
-    { label: "Informacja", value: "information" },
-    { label: "Wideo", value: "video" },
-    { label: "Audio", value: "music" },
-    { label: "Wywiad", value: "interview" }
+  { label: 'Wszystkie', value: 'all' },
+  { label: "Informacja", value: "information" },
+  { label: "Wideo", value: "video" },
+  { label: "Audio", value: "music" },
+  { label: "Wywiad", value: "interview" }
 ];
 
-const selectedCategory = Astro.url?.searchParams?.get('category') || 'all';
-let page = parseInt(Astro.url?.searchParams?.get('page') || '1');
+const searchParams = Astro.url.searchParams;
+const selectedCategory = searchParams.get('category') || 'all';
+let currentPage = Number(searchParams.get('page')) || 1;
 const itemsPerPage = 9;
 
+// Filter news by category
 const filteredNews = selectedCategory === 'all'
   ? allNews
   : allNews.filter(item => item.frontmatter.category.includes(selectedCategory));
 
-const totalPages = Math.max(1, Math.ceil(filteredNews.length / itemsPerPage));
-if (page < 1) page = 1;
-if (page > totalPages) page = totalPages;
-const paginatedNews = filteredNews.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+// Pagination calculations
+const totalItems = filteredNews.length;
+const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+currentPage = Math.max(1, Math.min(currentPage, totalPages));
+
+// Slice news for current page
+const paginatedNews = filteredNews.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
 ---
 <Layout title="Najświeższe wydarzenia muzyczne" description="Bądź na bieżąco z wydarzeniami muzycznymi, koncertami i festiwalami w polskim hip-hopie w Holandii. Sprawdź najnowsze informacje i wywiady z artystami.">
   <div class="flex flex-col lg:flex-row gap-8 mt-12">
     <div class="w-full">
-      <!-- Category Filter -->
+      <!-- Improved Category Filter -->
       <div class="flex flex-wrap justify-center mb-8 gap-2">
-        {categories.map(cat => (
-          <a
-            href={`/news?category=${cat.value}&page=1`}
-            class={`category-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all cursor-pointer${selectedCategory === cat.value ? ' active' : ''}`}
-          >
-            {cat.label}
-          </a>
-        ))}
+        {categories.map(cat => {
+          const params = new URLSearchParams(searchParams);
+          params.set('category', cat.value);
+          params.set('page', '1');  // Always reset to page 1 when changing category
+
+          return (
+            <a
+              href={`?${params.toString()}`}
+              class={`category-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all cursor-pointer${selectedCategory === cat.value ? ' active' : ''}`}
+            >
+              {cat.label}
+            </a>
+          );
+        })}
       </div>
 
       <!-- News Grid -->
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-5 mb-10">
-            {paginatedNews.length === 0 && (
-                <div class="col-span-2 text-center text-gray-400">Brak newsów w tej kategorii.</div>
-            )}
-            {paginatedNews.map(item => (
-                <EventCard item={item.frontmatter} file={item.file}  />
-            ))}
+        {paginatedNews.length === 0 ? (
+          <div class="col-span-full text-center text-gray-400 py-12">
+            <i class="fas fa-inbox text-4xl mb-2"></i>
+            <p>Brak newsów w tej kategorii.</p>
+          </div>
+        ) : (
+          paginatedNews.map(item => (
+            <EventCard item={item.frontmatter} file={item.file} />
+          ))
+        )}
       </div>
 
-      {paginatedNews.length !== 0 && (
-            <div class="flex justify-center gap-2 mb-10">
-            {/* Previous button */}
-            <a
-                href={`/news?category=${selectedCategory}&page=${page - 1}`}
-                class={`pagination-btn px-4 py-2 rounded-lg ${page === 1 ? 'opacity-50 pointer-events-none' : 'bg-gray-800 hover:bg-primary transition-all'}`}
-                aria-disabled={page === 1}
-            >
-                <i class="fas fa-chevron-left mr-2"></i>Poprzednia
-            </a>
-            {/* Page numbers */}
-            {Array.from({ length: totalPages }, (_, i) => (
-                <a
-                href={`/news?category=${selectedCategory}&page=${i + 1}`}
-                class={`pagination-btn px-4 py-2 rounded-lg ${page === i + 1 ? 'bg-primary' : 'bg-gray-800 hover:bg-primary transition-all'}`}
-                >
-                {i + 1}
-                </a>
-            ))}
-            {/* Next button */}
-            <a
-                href={`/news?category=${selectedCategory}&page=${page + 1}`}
-                class={`pagination-btn px-4 py-2 rounded-lg ${page === totalPages ? 'opacity-50 pointer-events-none' : 'bg-gray-800 hover:bg-primary transition-all'}`}
-                aria-disabled={page === totalPages}
-            >
-                Następna<i class="fas fa-chevron-right ml-2"></i>
-            </a>
-            </div>
+      <!-- Improved Pagination -->
+      {totalPages > 1 && (
+        <div class="flex justify-center gap-2 mb-10">
+          {/* Previous button */}
+          <a
+            href={`?${new URLSearchParams({
+              category: selectedCategory,
+              page: currentPage - 1
+            })}`}
+            class={`pagination-btn flex items-center px-4 py-2 rounded-lg ${
+              currentPage === 1
+                ? 'opacity-50 pointer-events-none'
+                : 'bg-gray-800 hover:bg-primary transition-all'
+            }`}
+            aria-disabled={currentPage === 1}
+          >
+            <i class="fas fa-chevron-left mr-2"></i>Poprzednia
+          </a>
+
+          {/* Page numbers - show limited set */}
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+            let pageNum = i + 1;
+            // if (totalPages <= 5) {
+            //   pageNum = i + 1;
+            // } else if (currentPage <= 3) {
+            //   pageNum = i + 1;
+            // } else if (currentPage >= totalPages - 2) {
+            //   pageNum = totalPages - 4 + i;
+            // } else {
+            //   pageNum = currentPage - 2 + i;
+            // }
+
+            return (
+              <a
+                href={`?${new URLSearchParams({
+                  category: selectedCategory,
+                  page: pageNum
+                })}`}
+                class={`pagination-btn px-4 py-2 rounded-lg ${
+                  currentPage === pageNum
+                    ? 'bg-primary'
+                    : 'bg-gray-800 hover:bg-primary transition-all'
+                }`}
+              >
+                {pageNum}
+              </a>
+            );
+          })}
+
+          {/* Next button */}
+          <a
+            href={`?${new URLSearchParams({
+              category: selectedCategory,
+              page: currentPage + 1
+            })}`}
+            class={`pagination-btn flex items-center px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? 'opacity-50 pointer-events-none'
+                : 'bg-gray-800 hover:bg-primary transition-all'
+            }`}
+            aria-disabled={currentPage === totalPages}
+          >
+            Następna<i class="fas fa-chevron-right ml-2"></i>
+          </a>
+        </div>
       )}
     </div>
   </div>
 </Layout>
 
 <style>
-    .category-btn.active {
-        background-color: #8b5cf6;
-    }
+  .category-btn.active {
+    background-color: #8b5cf6;
+  }
 </style>
