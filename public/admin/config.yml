@@ -41,10 +41,10 @@ collections:
         widget: "select"
         default: "news"
         options:
-          - { label: "Information", value: "information" }
-          - { label: "Video", value: "video" }
-          - { label: "Music", value: "music" }
-          - { label: "Interview", value: "interview" }
+          - { label: "Informacja", value: "information" }
+          - { label: "Wideo", value: "video" }
+          - { label: "Audio", value: "music" }
+          - { label: "Wywiad", value: "interview" }
       - { label: "Data publikacji", name: "date", widget: "datetime" }
       - { label: "Krótki Opis", name: "short_description", widget: "text", required: false }
       - { label: "Opis", name: "description", widget: "text", required: false }

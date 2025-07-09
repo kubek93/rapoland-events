@@ -6,23 +6,29 @@ const dateObj = new Date(item.date || '1970-01-01');
 const dateStr = dateObj.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
 const timeStr = item.time ? `, ${item.time}` : '';
 ---
-<div class="flex-shrink-0 bg-gray-900 max-w-100 rounded-xl glass-card event-card animate-fade-in">
+<div class="bg-gray-900 rounded-xl glass-card event-card animate-fade-in flex flex-col h-full">
   <div class="h-40 relative">
     <img src={item.thumbnail} alt={item.title} class="w-full h-full object-cover" style="min-height: 10rem; max-height: 10rem;" />
-    <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">NOWOŚĆ</div>
+    <div class="absolute top-4 left-4 bg-primary text-dark py-1 px-3 rounded-lg font-bold">{item.category}</div>
   </div>
-  <div class="p-5">
-    <span class="text-sm text-primary font-medium">{item.category || 'informacja'}</span>
-    <h3 class="text-xl font-bold my-3 text-white">{item.title}</h3>
-    <p class="text-gray-400 mb-4 line-clamp-2">{item.description}</p>
-    <div class="flex items-center text-gray-500">
+  <div class="p-5 flex flex-col flex-1">
+    <div class="flex items-center text-gray-500 my-2">
       <i class="far fa-clock mr-2"></i>
       <span>{dateStr}{timeStr}</span>
     </div>
+    {file ? (
+      <a href={`/news/${file.split('/').pop().replace('.md', '')}`} class="text-xl font-bold my-3 text-white hover:text-primary transition">
+        {item.title}
+      </a>
+    ) : (
+      <h3 class="text-xl font-bold my-3 text-white">{item.title}</h3>
+    )}
+    <p class="text-gray-400 mb-4 line-clamp-2">{item.description}</p>
+    <div class="flex-1"></div>
     {file && (
-        <a href={`/news/${file.split('/').pop().replace('.md', '')}`} class="w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-600 transition block text-center mt-4">
-          <i class="fas fa-book-open mr-2"></i>Czytaj więcej
-        </a>
+      <a href={`/news/${file.split('/').pop().replace('.md', '')}`} class="w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-600 transition block text-center mt-4">
+        <i class="fas fa-book-open mr-2"></i>Czytaj więcej
+      </a>
     )}
   </div>
 </div>
