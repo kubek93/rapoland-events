@@ -2,25 +2,15 @@
 import Layout from '../layouts/Layout.astro';
 import NewsScroll from '../components/NewsScroll.astro';
 import Events from '../components/Events.astro';
-import EventCard from '../components/EventCard.astro';
 
-const newsFiles = await Astro.glob('../content/news/*.md');
-const news = newsFiles.map(event => {
-  return {
-    ...event.frontmatter,
-    date: new Date(event.frontmatter.date),
-    slug: event.file.split('/').pop().split('.').shift()
-  }
-})
-.sort((a, b) => b.date - a.date);
-// .slice(0, 20);
-
-console.log('news', news);
-
+const allNews = await Astro.glob('../content/news/*.md');
+const news = allNews
+  .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+  .slice(0, 20);
 ---
 <Layout title="Najświeższe wydarzenia muzyczne" description="Bądź na bieżąco z wydarzeniami muzycznymi, koncertami i festiwalami w polskim hip-hopie w Holandii. Sprawdź najnowsze informacje i wywiady z artystami.">
-  <NewsScroll title="Uliczne aktualności" description="Co słychać w holenderskim świecie hip-hopu" news={news.filter(({category}) => category !== 'interview')} />
-  <NewsScroll title="Wywiady z artystami" description="Poznaj bliżej twórców polskiej sceny hip-hopowej w Holandii" news={news.filter(({category}) => category === 'interview')} />
+  <NewsScroll title="Uliczne aktualności" description="Co słychać w holenderskim świecie hip-hopu" news={news.filter(({frontmatter}) => frontmatter.category !== 'interview')} showAllUrl="/news" />
+  <NewsScroll title="Wywiady z artystami" description="Poznaj bliżej twórców polskiej sceny hip-hopowej w Holandii" news={news.filter(({frontmatter}) => frontmatter.category === 'interview')} showAllUrl="/news/?category=interview" />
     <div class="lg:col-span-1 space-y-8">
     <Events />
   </div>

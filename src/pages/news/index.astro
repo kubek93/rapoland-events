@@ -1,10 +1,10 @@
 ---
-import '../styles/global.css';
-import Layout from '../layouts/Layout.astro';
-import EventCard from '../components/EventCard.astro';
+import '../../styles/global.css';
+import Layout from '../../layouts/Layout.astro';
+import EventCard from '../../components/EventCard.astro';
 
 // Pobierz newsy z plików .md
-const allNews = await Astro.glob('../content/news/*.md');
+const allNews = await Astro.glob('../../content/news/*.md');
 const categories = [
     { label: 'Wszystkie', value: 'all' },
     { label: "Informacja", value: "information" },
@@ -12,8 +12,6 @@ const categories = [
     { label: "Audio", value: "music" },
     { label: "Wywiad", value: "interview" }
 ];
-
-console.log('Astro.url', Astro.url?.searchParams.get('page'))
 
 const selectedCategory = Astro.url?.searchParams?.get('category') || 'all';
 let page = parseInt(Astro.url?.searchParams?.get('page') || '1');
@@ -27,7 +25,6 @@ const totalPages = Math.max(1, Math.ceil(filteredNews.length / itemsPerPage));
 if (page < 1) page = 1;
 if (page > totalPages) page = totalPages;
 const paginatedNews = filteredNews.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-console.log(`Displaying page ${page} of ${totalPages} for category "${selectedCategory}"`);
 ---
 <Layout title="Najświeższe wydarzenia muzyczne" description="Bądź na bieżąco z wydarzeniami muzycznymi, koncertami i festiwalami w polskim hip-hopie w Holandii. Sprawdź najnowsze informacje i wywiady z artystami.">
   <div class="flex flex-col lg:flex-row gap-8 mt-12">
@@ -36,7 +33,7 @@ console.log(`Displaying page ${page} of ${totalPages} for category "${selectedCa
       <div class="flex flex-wrap justify-center mb-8 gap-2">
         {categories.map(cat => (
           <a
-            href={`/aktualnosci?category=${cat.value}&page=1`}
+            href={`/news?category=${cat.value}&page=1`}
             class={`category-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all cursor-pointer${selectedCategory === cat.value ? ' active' : ''}`}
           >
             {cat.label}
@@ -58,7 +55,7 @@ console.log(`Displaying page ${page} of ${totalPages} for category "${selectedCa
             <div class="flex justify-center gap-2 mb-10">
             {/* Previous button */}
             <a
-                href={`/aktualnosci?category=${selectedCategory}&page=${page - 1}`}
+                href={`/news?category=${selectedCategory}&page=${page - 1}`}
                 class={`pagination-btn px-4 py-2 rounded-lg ${page === 1 ? 'opacity-50 pointer-events-none' : 'bg-gray-800 hover:bg-primary transition-all'}`}
                 aria-disabled={page === 1}
             >
@@ -67,7 +64,7 @@ console.log(`Displaying page ${page} of ${totalPages} for category "${selectedCa
             {/* Page numbers */}
             {Array.from({ length: totalPages }, (_, i) => (
                 <a
-                href={`/aktualnosci?category=${selectedCategory}&page=${i + 1}`}
+                href={`/news?category=${selectedCategory}&page=${i + 1}`}
                 class={`pagination-btn px-4 py-2 rounded-lg ${page === i + 1 ? 'bg-primary' : 'bg-gray-800 hover:bg-primary transition-all'}`}
                 >
                 {i + 1}
@@ -75,7 +72,7 @@ console.log(`Displaying page ${page} of ${totalPages} for category "${selectedCa
             ))}
             {/* Next button */}
             <a
-                href={`/aktualnosci?category=${selectedCategory}&page=${page + 1}`}
+                href={`/news?category=${selectedCategory}&page=${page + 1}`}
                 class={`pagination-btn px-4 py-2 rounded-lg ${page === totalPages ? 'opacity-50 pointer-events-none' : 'bg-gray-800 hover:bg-primary transition-all'}`}
                 aria-disabled={page === totalPages}
             >
