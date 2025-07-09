@@ -1,0 +1,47 @@
+---
+// src/components/Pagination.astro
+const { currentPage, totalPages, basePath, query } = Astro.props;
+
+const prevDisabled = currentPage <= 1;
+const nextDisabled = currentPage >= totalPages;
+const queryString = query ? `?${query}` : '';
+---
+
+<div class="flex justify-center gap-2 mb-10">
+  <a
+    href={prevDisabled ? '#' : `${basePath}/${currentPage - 1}${queryString}`}
+    class={`px-4 py-2 rounded-lg transition-all ${
+      prevDisabled
+        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+        : 'bg-gray-800 hover:bg-primary'
+    }`}
+  >
+    <i class="fas fa-chevron-left mr-2"></i>Poprzednia
+  </a>
+
+  <div class="flex gap-1">
+    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+      <a
+        href={`${basePath}/${page}${queryString}`}
+        class={`px-4 py-2 rounded-lg ${
+          page === currentPage
+            ? 'bg-primary text-white'
+            : 'bg-gray-800 hover:bg-gray-700'
+        }`}
+      >
+        {page}
+      </a>
+    ))}
+  </div>
+
+  <a
+    href={nextDisabled ? '#' : `${basePath}/${currentPage + 1}${queryString}`}
+    class={`px-4 py-2 rounded-lg transition-all ${
+      nextDisabled
+        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+        : 'bg-gray-800 hover:bg-primary'
+    }`}
+  >
+    Następna<i class="fas fa-chevron-right ml-2"></i>
+  </a>
+</div>

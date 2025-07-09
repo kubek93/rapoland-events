@@ -1,379 +1,87 @@
 ---
 import '../styles/global.css';
-import Footer from '../components/Footer.astro';
-import Nav from '../components/Nav.astro';
-import News from '../components/News.astro';
-import Header from '../components/Header.astro';
-import Sidebar from '../components/Sidebar.astro';
+import Layout from '../layouts/Layout.astro';
+import EventCard from '../components/EventCard.astro';
 
-// Pobieranie wydarzeń z Decap CMS
-const newsFiles = await Astro.glob('../content/news/*.md');
-const newsData = newsFiles.map(event => {
-  return {
-    ...event.frontmatter,
-    date: new Date(event.frontmatter.date),
-    slug: event.file.split('/').pop().split('.').shift()
-  }
-})
-.sort((a, b) => b.date - a.date)
-.slice(0, 20);
+// Pobierz newsy z plików .md
+const allNews = await Astro.glob('../content/news/*.md');
+const categories = [
+  { label: 'Wszystkie', value: 'all' },
+  { label: 'Studio', value: 'studio' },
+  { label: 'Video', value: 'video' },
+  { label: 'Wywiady', value: 'interviews' },
+];
 
-// Konfiguracja Tailwind
-const tailwindConfig = {
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-        },
-        secondary: {
-          50: '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
-        },
-        dark: {
-          900: '#0f172a',
-          800: '#1e293b',
-          700: '#334155',
-        }
-      },
-      fontFamily: {
-        'sans': ['Inter', 'sans-serif'],
-        'heading': ['Poppins', 'sans-serif'],
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.4s ease-out',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        }
-      }
-    }
-  }
-};
+console.log('Astro.url', Astro.url?.searchParams.get('page'))
+
+const selectedCategory = Astro.url?.searchParams?.get('category') || 'all';
+let page = parseInt(Astro.url?.searchParams?.get('page') || '1');
+const itemsPerPage = 9;
+
+const filteredNews = selectedCategory === 'all'
+  ? allNews
+  : allNews.filter(item => item.frontmatter.category === selectedCategory);
+
+const totalPages = Math.max(1, Math.ceil(filteredNews.length / itemsPerPage));
+if (page < 1) page = 1;
+if (page > totalPages) page = totalPages;
+const paginatedNews = filteredNews.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+console.log(`Displaying page ${page} of ${totalPages} for category "${selectedCategory}"`);
 ---
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>News Portal</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#8b5cf6',
-            secondary: '#7c3aed'
-          }
-        }
-      }
-    }
-  </script>
-</head>
-<body class="bg-gray-900 min-h-screen text-white font-sans">
-    <Nav />
-
-  <div class="container mx-auto px-4 py-8">
-    <Header pretitle="Wszystkie" title="aktualności" description="Sprawdź co słychać na polskiej scenie muzycznej w Holandii." />
-
-    <div class="flex flex-col lg:flex-row gap-8 mt-12">
-      <div class="w-full lg:w-3/4">
-        <!-- Category Filter -->
-        <div class="flex flex-wrap justify-center mb-8 gap-2">
-          <button class="category-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all active" data-category="all">
-            Wszystkie
-          </button>
-          <button class="category-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all" data-category="studio">
-            Studio
-          </button>
-          <button class="category-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all" data-category="video">
-            Video
-          </button>
-          <button class="category-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all" data-category="interviews">
-            Wywiady
-          </button>
-        </div>
-
-        <!-- News Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          <!-- News items will be dynamically inserted here -->
-        </div>
-
-        <!-- Pagination -->
-        <div class="flex justify-center gap-2 mb-10">
-          <button class="pagination-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all" data-page="prev">
-            <i class="fas fa-chevron-left mr-2"></i>Poprzednia
-          </button>
-          <div class="pagination-numbers flex gap-1">
-            <!-- Page numbers will be inserted here -->
-          </div>
-          <button class="pagination-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all" data-page="next">
-            Następna<i class="fas fa-chevron-right ml-2"></i>
-          </button>
-        </div>
+<Layout title="Najświeższe wydarzenia muzyczne" description="Bądź na bieżąco z wydarzeniami muzycznymi, koncertami i festiwalami w polskim hip-hopie w Holandii. Sprawdź najnowsze informacje i wywiady z artystami.">
+  <div class="flex flex-col lg:flex-row gap-8 mt-12">
+    <div class="w-full">
+      <!-- Category Filter -->
+      <div class="flex flex-wrap justify-center mb-8 gap-2">
+        {categories.map(cat => (
+          <a
+            href={`/aktualnosci?category=${cat.value}&page=1`}
+            class={`category-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-primary transition-all cursor-pointer${selectedCategory === cat.value ? ' active' : ''}`}
+          >
+            {cat.label}
+          </a>
+        ))}
       </div>
 
-        <div class="w-full lg:w-1/4">
-            <Sidebar />
-        </div>
+      <!-- News Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-10">
+        {paginatedNews.length === 0 && (
+          <div class="col-span-2 text-center text-gray-400">Brak newsów w tej kategorii.</div>
+        )}
+        {paginatedNews.map(item => (
+          <EventCard item={item.frontmatter} file={item.file}  />
+        ))}
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center gap-2 mb-10">
+        {/* Previous button */}
+        <a
+          href={`/aktualnosci?category=${selectedCategory}&page=${page - 1}`}
+          class={`pagination-btn px-4 py-2 rounded-lg ${page === 1 ? 'opacity-50 pointer-events-none' : 'bg-gray-800 hover:bg-primary transition-all'}`}
+          aria-disabled={page === 1}
+        >
+          <i class="fas fa-chevron-left mr-2"></i>Poprzednia
+        </a>
+        {/* Page numbers */}
+        {Array.from({ length: totalPages }, (_, i) => (
+          <a
+            href={`/aktualnosci?category=${selectedCategory}&page=${i + 1}`}
+            class={`pagination-btn px-4 py-2 rounded-lg ${page === i + 1 ? 'bg-primary' : 'bg-gray-800 hover:bg-primary transition-all'}`}
+          >
+            {i + 1}
+          </a>
+        ))}
+        {/* Next button */}
+        <a
+          href={`/aktualnosci?category=${selectedCategory}&page=${page + 1}`}
+          class={`pagination-btn px-4 py-2 rounded-lg ${page === totalPages ? 'opacity-50 pointer-events-none' : 'bg-gray-800 hover:bg-primary transition-all'}`}
+          aria-disabled={page === totalPages}
+        >
+          Następna<i class="fas fa-chevron-right ml-2"></i>
+        </a>
+      </div>
     </div>
   </div>
-  <!-- News Detail Modal -->
-    <div id="newsModal" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="modalTitle" class="text-2xl font-bold"></h2>
-                    <button id="closeModal" class="text-gray-400 hover:text-white">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-                <div id="modalCategory" class="inline-block bg-primary text-white text-sm px-3 py-1 rounded-full mb-4"></div>
-                <div id="modalDate" class="text-gray-400 mb-4"></div>
-                <img id="modalImage" src="" alt="" class="w-full h-64 object-cover rounded-lg mb-4">
-                <div id="modalContent" class="text-gray-300 mb-6"></div>
-                <div class="flex justify-end">
-                    <button id="closeModalBtn" class="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
-                        Zamknij
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+</Layout>
 
-  <script>
-    // Sample news data
-    const newsData = [
-      { id: 1, title: "Nowy album już w sprzedaży!", category: "studio", date: "2023-06-15", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", content: "Z przyjemnością ogłaszamy, że nasz najnowszy album 'Nocne Inspiracje' jest już dostępny we wszystkich platformach streamingowych. Album zawiera 12 premierowych utworów, które powstały podczas nocnych sesji w naszym studiu nagraniowym. Zapraszamy do odsłuchu!" },
-      { id: 2, title: "Premiera nowego teledysku", category: "video", date: "2023-06-10", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", content: "Zapraszamy do obejrzenia naszego najnowszego teledysku do utworu 'Letnia Noc'. Klip został nakręcony w malowniczych plenerach Mazur. Reżyserią zajął się znany twórca filmowy Jan Kowalski. Teledysk dostępny jest na naszym kanale YouTube." },
-      { id: 3, title: "Wywiad dla Music Magazine", category: "interviews", date: "2023-06-05", image: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", content: "W najnowszym numerze Music Magazine ukazał się obszerny wywiad z naszym wokalistą. Opowiada w nim o kulisach powstawania nowego albumu, inspiracjach muzycznych i planach na najbliższe miesiące. Cały wywiad można przeczytać w aktualnym wydaniu magazynu." },
-      { id: 4, title: "Remix naszego hitu", category: "studio", date: "2023-05-28", image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", content: "Znany DJ i producent Martin Garrix przygotował oficjalny remix naszego hitu 'Summer Vibes'. Wersja remixowa zyskała już uznanie krytyków i pojawiła się na wielu playlistach. Utwór jest już dostępny na wszystkich platformach streamingowych." },
-      { id: 5, title: "Nowy sprzęt w studio", category: "studio", date: "2023-05-20", image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", content: "Nasze studio wzbogaciło się o nowy sprzęt nagraniowy. Zakupiliśmy m.in. legendarny mikrofon Neumann U87, konsoletę marki SSL oraz nowoczesny interfejs audio. Dzięki tym ulepszeniom jakość naszych nagrań osiągnie jeszcze wyższy poziom." },
-      { id: 6, title: "Zapowiedź nowego singla", category: "video", date: "2023-05-15", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", content: "Już za tydzień premiera naszego nowego singla 'Ocean Dźwięków'. Utwór zaskoczy słuchaczy nowym brzmieniem i ciekawymi aranżacjami. Wraz z singlem ukaże się teledysk, który został zrealizowany na wybrzeżu Bałtyku." },
-      { id: 7, title: "Wywiad radiowy", category: "interviews", date: "2023-05-10", image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", content: "Cały zespół wziął udział w specjalnym wywiadzie na antenie Radia Muzyka. Rozmawialiśmy o naszej najnowszej trasie koncertowej, planach na wakacje i nowych projektach. Wywiad można odsłuchać na stronie radia w zakładce 'Archiwum'." },
-      { id: 8, title: "Sesja zdjęciowa do albumu", category: "studio", date: "2023-05-01", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", content: "Zakończyliśmy sesję zdjęciową do naszego nadchodzącego albumu. Zdjęcia wykonał znany fotograf mody, Adam Nowak. Sesja odbyła się w industrialnych przestrzeniach postoczniowych w Gdańsku. Efekty możecie zobaczyć na okładce albumu, który ukaże się już w lipcu." }
-    ];
-
-    // DOM Elements
-    const newsGrid = document.querySelector('.grid');
-    const categoryBtns = document.querySelectorAll('.category-btn');
-    const paginationNumbers = document.querySelector('.pagination-numbers');
-    const paginationBtns = document.querySelectorAll('.pagination-btn');
-
-    // State
-    let currentCategory = 'all';
-    let currentPage = 1;
-    const itemsPerPage = 4;
-
-    // Initialize
-    renderNews();
-    renderPagination();
-
-    // Event Listeners
-    categoryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Remove active class from all buttons
-        categoryBtns.forEach(b => b.classList.remove('active'));
-        // Add active class to clicked button
-        btn.classList.add('active');
-        // Set current category
-        currentCategory = btn.dataset.category;
-        // Reset to first page
-        currentPage = 1;
-        // Re-render news and pagination
-        renderNews();
-        renderPagination();
-      });
-    });
-
-    paginationBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (btn.dataset.page === 'prev' && currentPage > 1) {
-          currentPage--;
-        } else if (btn.dataset.page === 'next' && currentPage < getTotalPages()) {
-          currentPage++;
-        }
-        renderNews();
-        renderPagination();
-      });
-    });
-
-    // Modal functionality
-    const newsModal = document.getElementById('newsModal');
-    const closeModal = document.getElementById('closeModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-
-    closeModal.addEventListener('click', () => {
-      newsModal.classList.add('hidden');
-    });
-
-    closeModalBtn.addEventListener('click', () => {
-      newsModal.classList.add('hidden');
-    });
-
-    // Helper Functions
-    function getFilteredNews() {
-      if (currentCategory === 'all') {
-        return newsData;
-      }
-      return newsData.filter(item => item.category === currentCategory);
-    }
-
-    function getPaginatedNews() {
-      const filteredNews = getFilteredNews();
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      return filteredNews.slice(startIndex, endIndex);
-    }
-
-    function getTotalPages() {
-      return Math.ceil(getFilteredNews().length / itemsPerPage);
-    }
-
-    function renderNews() {
-      const newsToRender = getPaginatedNews();
-      newsGrid.innerHTML = '';
-
-      newsToRender.forEach(item => {
-        const categoryColors = {
-          studio: 'bg-purple-500',
-          video: 'bg-red-500',
-          interviews: 'bg-green-500'
-        };
-
-        const newsItem = document.createElement('div');
-        newsItem.className = 'bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all';
-        newsItem.innerHTML = `
-          <img src="${item.image}" alt="${item.title}" class="w-full h-48 object-cover">
-          <div class="p-5">
-            <div class="flex justify-between items-start mb-3">
-              <span class="${categoryColors[item.category]} text-white text-xs px-2 py-1 rounded">${getCategoryName(item.category)}</span>
-              <span class="text-gray-400 text-sm">${formatDate(item.date)}</span>
-            </div>
-            <h3 class="text-xl font-bold mb-3">${item.title}</h3>
-            <p class="text-gray-400 mb-4 line-clamp-2">${item.content}</p>
-            <button class="open-detail-btn w-full bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-600 transition" data-id="${item.id}">
-              <i class="fas fa-book-open mr-2"></i>Czytaj więcej
-            </button>
-          </div>
-        `;
-        newsGrid.appendChild(newsItem);
-      });
-
-      // Add event listeners to detail buttons
-      document.querySelectorAll('.open-detail-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const newsId = parseInt(btn.dataset.id);
-          const newsItem = newsData.find(item => item.id === newsId);
-          if (newsItem) {
-            openNewsDetail(newsItem);
-          }
-        });
-      });
-    }
-
-    function renderPagination() {
-      const totalPages = getTotalPages();
-      paginationNumbers.innerHTML = '';
-
-      for (let i = 1; i <= totalPages; i++) {
-        const pageBtn = document.createElement('button');
-        pageBtn.className = `page-number px-4 py-2 rounded-lg ${i === currentPage ? 'bg-primary' : 'bg-gray-800 hover:bg-gray-700'}`;
-        pageBtn.textContent = i;
-        pageBtn.dataset.page = i;
-
-        pageBtn.addEventListener('click', () => {
-          currentPage = i;
-          renderNews();
-          renderPagination();
-        });
-
-        paginationNumbers.appendChild(pageBtn);
-      }
-    }
-
-    function openNewsDetail(newsItem) {
-      document.getElementById('modalTitle').textContent = newsItem.title;
-      document.getElementById('modalCategory').textContent = getCategoryName(newsItem.category);
-      document.getElementById('modalDate').textContent = formatDate(newsItem.date, true);
-      document.getElementById('modalImage').src = newsItem.image;
-      document.getElementById('modalContent').innerHTML = `
-        <p class="mb-4">${newsItem.content}</p>
-        <p class="text-gray-400 italic">Dziękujemy za przeczytanie tego artykułu!</p>
-      `;
-
-      // Set category color
-      const categoryColors = {
-        studio: 'bg-purple-500',
-        video: 'bg-red-500',
-        interviews: 'bg-green-500'
-      };
-      document.getElementById('modalCategory').className = `inline-block ${categoryColors[newsItem.category]} text-white text-sm px-3 py-1 rounded-full mb-4`;
-
-      newsModal.classList.remove('hidden');
-    }
-
-    function getCategoryName(category) {
-      const names = {
-        studio: 'Studio',
-        video: 'Video',
-        interviews: 'Wywiady'
-      };
-      return names[category] || category;
-    }
-
-    function formatDate(dateString, full = false) {
-      const date = new Date(dateString);
-      const options = { day: 'numeric', month: 'long' };
-      if (full) {
-        options.year = 'numeric';
-      }
-      return date.toLocaleDateString('pl-PL', options);
-    }
-  </script>
-
-  <style>
-    .category-btn.active {
-      background-color: #8b5cf6;
-    }
-
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    #newsModal {
-      transition: opacity 0.3s ease;
-    }
-  </style>
-</body>
-</html>

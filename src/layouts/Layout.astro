@@ -1,583 +1,122 @@
 ---
-// src/layouts/Layout.astro
 import '../styles/global.css';
-
-const { title } = Astro.props;
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Header from '../components/Header.astro';
 ---
 
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Events Calendar</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
-            color: #e2e8f0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wydarzenia | Kalendarz Imprez</title>
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            overflow: hidden;
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script>
+    const tailwindConfig = {
+        theme: {
+            extend: {
+            colors: {
+                primary: {
+                50: '#f0f9ff',
+                100: '#e0f2fe',
+                200: '#bae6fd',
+                300: '#7dd3fc',
+                400: '#38bdf8',
+                500: '#0ea5e9',
+                600: '#0284c7',
+                700: '#0369a1',
+                800: '#075985',
+                900: '#0c4a6e',
+                },
+                secondary: {
+                50: '#f5f3ff',
+                100: '#ede9fe',
+                200: '#ddd6fe',
+                300: '#c4b5fd',
+                400: '#a78bfa',
+                500: '#8b5cf6',
+                600: '#7c3aed',
+                700: '#6d28d9',
+                800: '#5b21b6',
+                900: '#4c1d95',
+                },
+                dark: {
+                900: '#0f172a',
+                800: '#1e293b',
+                700: '#334155',
+                }
+            },
+            fontFamily: {
+                'sans': ['Inter', 'sans-serif'],
+                'heading': ['Poppins', 'sans-serif'],
+            },
+            animation: {
+                'fade-in': 'fadeIn 0.5s ease-in-out',
+                'slide-up': 'slideUp 0.4s ease-out',
+            },
+            keyframes: {
+                fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+                },
+                slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+                }
+            }
+            }
         }
+    };
+    tailwind.config = JSON.parse(`---${JSON.stringify(tailwindConfig.theme)}---`);
+  </script>
 
-        .event-card {
-            transition: all 0.3s ease;
-            transform-origin: center;
-        }
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        .event-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .calendar-day:hover {
-            background: rgba(124, 58, 237, 0.15) !important;
-            transform: scale(1.05);
-        }
-
-        .calendar-day.active {
-            background: rgba(124, 58, 237, 0.25) !important;
-            box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.5);
-        }
-
-        .attendee-avatar {
-            transition: transform 0.3s ease;
-        }
-
-        .attendee-avatar:hover {
-            transform: translateY(-3px);
-            z-index: 10;
-        }
-
-        .category-badge {
-            transition: all 0.2s ease;
-        }
-
-        .category-badge:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
-
-        .date-badge {
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .date-badge:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .gradient-bg {
-            background: linear-gradient(135deg, #7c3aed 0%, #0ea5e9 100%);
-        }
-
-        .tech-gradient {
-            background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%);
-        }
-
-        .music-gradient {
-            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-        }
-
-        .art-gradient {
-            background: linear-gradient(135deg, #f97316 0%, #eab308 100%);
-        }
-
-        .business-gradient {
-            background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
-        }
-    </style>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="font-sans antialiased">
-
   <!-- Header -->
-    <header class="gradient-bg text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <h1 class="text-4xl font-heading font-bold tracking-tight">Event Horizon</h1>
-                    <p class="mt-2 text-indigo-200">Discover the future of events</p>
-                </div>
-                <div class="flex space-x-4">
-                    <button class="bg-white text-indigo-700 hover:bg-indigo-50 px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl flex items-center">
-                        <i class="fas fa-plus mr-2"></i>Add Event
-                    </button>
-                    <button class="bg-indigo-900 hover:bg-indigo-800 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl flex items-center">
-                        <i class="fas fa-search mr-2"></i>Search
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Calendar & Filters -->
-            <div class="lg:col-span-1 space-y-8">
-                <!-- Calendar Section -->
-                <div class="glass-card animate-fade-in">
-                    <div class="bg-indigo-900/30 py-5 px-6 border-b border-indigo-800">
-                        <div class="flex justify-between items-center">
-                            <h2 class="text-xl font-heading font-semibold">June 2025</h2>
-                            <div class="flex space-x-2">
-                                <button class="p-2 rounded-lg bg-indigo-800 hover:bg-indigo-700">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <button class="p-2 rounded-lg bg-indigo-800 hover:bg-indigo-700">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <!-- Calendar Header -->
-                        <div class="grid grid-cols-7 gap-1 mb-4">
-                            <div class="text-center text-indigo-300 font-medium py-2">Sun</div>
-                            <div class="text-center text-indigo-300 font-medium py-2">Mon</div>
-                            <div class="text-center text-indigo-300 font-medium py-2">Tue</div>
-                            <div class="text-center text-indigo-300 font-medium py-2">Wed</div>
-                            <div class="text-center text-indigo-300 font-medium py-2">Thu</div>
-                            <div class="text-center text-indigo-300 font-medium py-2">Fri</div>
-                            <div class="text-center text-indigo-300 font-medium py-2">Sat</div>
-                        </div>
-
-                        <!-- Calendar Days -->
-                        <div class="grid grid-cols-7 gap-1">
-                            <!-- Previous month days -->
-                            <div class="text-center text-indigo-700 p-2">25</div>
-                            <div class="text-center text-indigo-700 p-2">26</div>
-                            <div class="text-center text-indigo-700 p-2">27</div>
-                            <div class="text-center text-indigo-700 p-2">28</div>
-                            <div class="text-center text-indigo-700 p-2">29</div>
-                            <div class="text-center text-indigo-700 p-2">30</div>
-                            <div class="text-center text-indigo-700 p-2">31</div>
-
-                            <!-- Current month days -->
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">1</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">2</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">3</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">4</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">5</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">6</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">7</div>
-
-                            <!-- Week 2 -->
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">8</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">9</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">10</div>
-                            <div class="text-center p-2 calendar-day rounded-full bg-indigo-900/30 cursor-pointer active">11</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">12</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">13</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">14</div>
-
-                            <!-- Week 3 -->
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">15</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">16</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">17</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">18</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">19</div>
-                            <div class="text-center p-2 calendar-day rounded-full bg-indigo-900/30 cursor-pointer active">20</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">21</div>
-
-                            <!-- Week 4 -->
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">22</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">23</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">24</div>
-                            <div class="text-center p-2 calendar-day rounded-full bg-indigo-900/30 cursor-pointer active">25</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">26</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">27</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">28</div>
-
-                            <!-- Week 5 -->
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">29</div>
-                            <div class="text-center p-2 calendar-day rounded-full hover:bg-indigo-900/30 cursor-pointer">30</div>
-                            <div class="text-center text-indigo-700 p-2">1</div>
-                            <div class="text-center text-indigo-700 p-2">2</div>
-                            <div class="text-center text-indigo-700 p-2">3</div>
-                            <div class="text-center text-indigo-700 p-2">4</div>
-                            <div class="text-center text-indigo-700 p-2">5</div>
-                        </div>
-                    </div>
-
-                    <!-- Event Markers -->
-                    <div class="p-6 border-t border-indigo-800">
-                        <h3 class="font-heading font-semibold text-lg mb-4">Today's Events</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start">
-                                <div class="w-2 h-2 bg-indigo-400 rounded-full mt-2 mr-3 animate-pulse-slow"></div>
-                                <div>
-                                    <p class="font-medium">Tech Innovators Conference</p>
-                                    <p class="text-sm text-indigo-300 mt-1">9:00 AM - Convention Center</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="w-2 h-2 bg-pink-400 rounded-full mt-2 mr-3 animate-pulse-slow"></div>
-                                <div>
-                                    <p class="font-medium">Design Workshop</p>
-                                    <p class="text-sm text-indigo-300 mt-1">2:00 PM - Creative Hub</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Filter Section -->
-                <div class="glass-card animate-fade-in">
-                    <div class="p-6">
-                        <h3 class="font-heading font-semibold text-lg mb-4">Filter Events</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-indigo-200 mb-2 font-medium">Categories</label>
-                                <div class="flex flex-wrap gap-2">
-                                    <button class="px-3 py-1 bg-indigo-800 hover:bg-indigo-700 rounded-full text-sm transition-all duration-200 category-badge">
-                                        All
-                                    </button>
-                                    <button class="px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-full text-sm transition-all duration-200 category-badge">
-                                        Technology
-                                    </button>
-                                    <button class="px-3 py-1 bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 rounded-full text-sm transition-all duration-200 category-badge">
-                                        Music
-                                    </button>
-                                    <button class="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-full text-sm transition-all duration-200 category-badge">
-                                        Art & Culture
-                                    </button>
-                                    <button class="px-3 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-full text-sm transition-all duration-200 category-badge">
-                                        Business
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-indigo-200 mb-2 font-medium">Location</label>
-                                <div class="relative">
-                                    <input type="text" placeholder="Search city or venue" class="w-full p-3 bg-indigo-900/30 border border-indigo-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 pl-10">
-                                    <i class="fas fa-map-marker-alt absolute left-3 top-3.5 text-indigo-400"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-indigo-200 mb-2 font-medium">Date Range</label>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div class="relative">
-                                        <input type="date" class="w-full p-3 bg-indigo-900/30 border border-indigo-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                    </div>
-                                    <div class="relative">
-                                        <input type="date" class="w-full p-3 bg-indigo-900/30 border border-indigo-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="w-full gradient-bg hover:opacity-90 text-white py-3 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl">
-                                Apply Filters
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stats -->
-                <div class="glass-card animate-fade-in">
-                    <div class="p-6">
-                        <h3 class="font-heading font-semibold text-lg mb-4">Event Stats</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-                                <div class="text-3xl font-bold text-indigo-300">24</div>
-                                <div class="text-sm text-indigo-400 mt-1">Upcoming Events</div>
-                            </div>
-                            <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-                                <div class="text-3xl font-bold text-pink-300">8</div>
-                                <div class="text-sm text-indigo-400 mt-1">This Week</div>
-                            </div>
-                            <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-                                <div class="text-3xl font-bold text-amber-300">5</div>
-                                <div class="text-sm text-indigo-400 mt-1">Free Events</div>
-                            </div>
-                            <div class="bg-indigo-900/30 p-4 rounded-lg text-center">
-                                <div class="text-3xl font-bold text-emerald-300">12</div>
-                                <div class="text-sm text-indigo-400 mt-1">Virtual</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Events List -->
-            <div class="lg:col-span-2">
-                <div class="flex justify-between items-center mb-8">
-                    <div>
-                        <h2 class="text-3xl font-heading font-bold text-white">Upcoming Events</h2>
-                        <p class="text-indigo-300 mt-2">Discover experiences that shape the future</p>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="p-3 rounded-lg bg-indigo-800 hover:bg-indigo-700 transition-all duration-200">
-                            <i class="fas fa-list"></i>
-                        </button>
-                        <button class="p-3 rounded-lg bg-indigo-800 hover:bg-indigo-700 transition-all duration-200">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Event Cards -->
-                <div class="space-y-6">
-                    <!-- Event 1 -->
-                    <div class="glass-card event-card overflow-hidden animate-slide-up">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-1/3 tech-gradient p-6 flex flex-col items-center justify-center text-white">
-                                <div class="text-5xl font-bold">11</div>
-                                <div class="text-xl uppercase tracking-wider">Jun</div>
-                                <div class="mt-2 text-indigo-100">2025</div>
-                                <div class="mt-6 flex items-center bg-indigo-900/30 px-4 py-2 rounded-full">
-                                    <i class="far fa-clock mr-2"></i>
-                                    <span>9:00 AM</span>
-                                </div>
-                            </div>
-                            <div class="md:w-2/3 p-6">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="text-xl font-heading font-bold text-white">Tech Innovators Conference</h3>
-                                    <span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium category-badge">
-                                        Technology
-                                    </span>
-                                </div>
-                                <p class="mt-3 text-indigo-300">Join industry leaders discussing the future of AI, blockchain, and quantum computing in this exclusive 3-day event.</p>
-                                <div class="mt-5 flex items-center text-indigo-200">
-                                    <i class="fas fa-map-marker-alt mr-2 text-blue-400"></i>
-                                    <span>Convention Center, Downtown</span>
-                                </div>
-                                <div class="mt-6 flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="flex -space-x-2">
-                                            <div class="w-8 h-8 rounded-full bg-blue-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                JD
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-pink-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                AS
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-emerald-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                MK
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-indigo-900 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-indigo-400 shadow-md attendee-avatar">
-                                                +8
-                                            </div>
-                                        </div>
-                                        <span class="ml-3 text-sm text-indigo-400">120+ attending</span>
-                                    </div>
-                                    <button class="tech-gradient hover:opacity-90 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md">
-                                        Register Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Event 2 -->
-                    <div class="glass-card event-card overflow-hidden animate-slide-up">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-1/3 music-gradient p-6 flex flex-col items-center justify-center text-white">
-                                <div class="text-5xl font-bold">20</div>
-                                <div class="text-xl uppercase tracking-wider">Jun</div>
-                                <div class="mt-2 text-indigo-100">2025</div>
-                                <div class="mt-6 flex items-center bg-indigo-900/30 px-4 py-2 rounded-full">
-                                    <i class="far fa-clock mr-2"></i>
-                                    <span>2:00 PM</span>
-                                </div>
-                            </div>
-                            <div class="md:w-2/3 p-6">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="text-xl font-heading font-bold text-white">Summer Music Festival</h3>
-                                    <span class="px-3 py-1 bg-pink-500/20 text-pink-300 rounded-full text-sm font-medium category-badge">
-                                        Music
-                                    </span>
-                                </div>
-                                <p class="mt-3 text-indigo-300">Annual summer festival featuring top artists across multiple stages with food trucks and art installations.</p>
-                                <div class="mt-5 flex items-center text-indigo-200">
-                                    <i class="fas fa-map-marker-alt mr-2 text-pink-400"></i>
-                                    <span>Riverside Park, East Side</span>
-                                </div>
-                                <div class="mt-6 flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="flex -space-x-2">
-                                            <div class="w-8 h-8 rounded-full bg-pink-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                LW
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-purple-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                JR
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-amber-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                KT
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-indigo-900 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-indigo-400 shadow-md attendee-avatar">
-                                                +12
-                                            </div>
-                                        </div>
-                                        <span class="ml-3 text-sm text-indigo-400">350+ attending</span>
-                                    </div>
-                                    <button class="music-gradient hover:opacity-90 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md">
-                                        Get Tickets
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Event 3 -->
-                    <div class="glass-card event-card overflow-hidden animate-slide-up">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-1/3 art-gradient p-6 flex flex-col items-center justify-center text-white">
-                                <div class="text-5xl font-bold">25</div>
-                                <div class="text-xl uppercase tracking-wider">Jun</div>
-                                <div class="mt-2 text-indigo-100">2025</div>
-                                <div class="mt-6 flex items-center bg-indigo-900/30 px-4 py-2 rounded-full">
-                                    <i class="far fa-clock mr-2"></i>
-                                    <span>6:30 PM</span>
-                                </div>
-                            </div>
-                            <div class="md:w-2/3 p-6">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="text-xl font-heading font-bold text-white">Modern Art Exhibition</h3>
-                                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-sm font-medium category-badge">
-                                        Art & Culture
-                                    </span>
-                                </div>
-                                <p class="mt-3 text-indigo-300">Exhibition showcasing contemporary artists pushing boundaries in visual arts and interactive installations.</p>
-                                <div class="mt-5 flex items-center text-indigo-200">
-                                    <i class="fas fa-map-marker-alt mr-2 text-amber-400"></i>
-                                    <span>City Art Museum, West District</span>
-                                </div>
-                                <div class="mt-6 flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="flex -space-x-2">
-                                            <div class="w-8 h-8 rounded-full bg-amber-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                SD
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-rose-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                EM
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-violet-500 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-white shadow-md attendee-avatar">
-                                                LR
-                                            </div>
-                                            <div class="w-8 h-8 rounded-full bg-indigo-900 border-2 border-indigo-900 flex items-center justify-center text-xs font-bold text-indigo-400 shadow-md attendee-avatar">
-                                                +5
-                                            </div>
-                                        </div>
-                                        <span class="ml-3 text-sm text-indigo-400">85+ attending</span>
-                                    </div>
-                                    <button class="art-gradient hover:opacity-90 text-white px-5 py-2.5 rounded-lg transition-all duration-300 font-medium shadow-md">
-                                        Reserve Spot
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Load More -->
-                <div class="mt-10 text-center">
-                    <button class="glass-card hover:bg-indigo-900/50 px-8 py-3 rounded-full font-medium transition-all duration-300 inline-flex items-center">
-                        <i class="fas fa-sync-alt mr-2"></i> Load More Events
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
+  <Nav />
 
 
-  <!-- Footer -->
-    <footer class="border-t border-indigo-800 py-12 mt-16">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-heading font-bold mb-4">Event Horizon</h3>
-                    <p class="text-indigo-400">Discover the best events happening near you. From conferences to concerts, we've got you covered.</p>
-                    <div class="flex space-x-4 mt-6">
-                        <a href="#" class="w-10 h-10 rounded-full bg-indigo-900 flex items-center justify-center hover:bg-indigo-800 transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-indigo-900 flex items-center justify-center hover:bg-indigo-800 transition-colors">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-indigo-900 flex items-center justify-center hover:bg-indigo-800 transition-colors">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-heading font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-3 text-indigo-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Upcoming Events</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Popular Categories</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Submit Event</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Venues</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Organizers</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-heading font-semibold mb-4">Resources</h4>
-                    <ul class="space-y-3 text-indigo-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Community</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Partners</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Developer API</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-heading font-semibold mb-4">Newsletter</h4>
-                    <p class="text-indigo-400 mb-4">Subscribe to receive event updates and exclusive offers</p>
-                    <div class="flex">
-                        <input type="email" placeholder="Your email" class="flex-grow p-3 bg-indigo-900/30 border border-indigo-800 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <button class="gradient-bg hover:opacity-90 text-white px-5 py-3 rounded-r-lg transition-all duration-300 font-medium">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-indigo-800 mt-10 pt-8 text-center text-indigo-500">
-                <p>&copy; 2025 Event Horizon. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-        <script>
-        // Interaktywny kalendarz
-        document.querySelectorAll('.calendar-day').forEach(day => {
-            day.addEventListener('click', function() {
-                document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('active'));
-                this.classList.add('active');
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-12">
+    <Header title={Astro.props.title} description={Astro.props.description} />
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <slot />
+      </div>
 
-                // Tutaj można dodać kod do filtrowania wydarzeń po dacie
-            });
-        });
+      <!-- Sidebar -->
+      <Sidebar />
+  </main>
 
-        // Animowane przyciski kategorii
-        document.querySelectorAll('.category-badge').forEach(badge => {
-            badge.addEventListener('click', function() {
-                this.classList.toggle('bg-indigo-700');
-            });
-        });
+  <Footer />
 
-        // Efekt hover na kartach wydarzeń
-        const eventCards = document.querySelectorAll('.event-card');
-        eventCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-5px) scale(1.02)';
-                card.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1)';
-            });
+  <script>
+    // Animacje przycisków
+    document.querySelectorAll('a, button').forEach(btn => {
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform = 'scale(0.98)';
+      });
 
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = '';
-                card.style.boxShadow = '';
-            });
-        });
-    </script>
-    <script src="https://unpkg.com/decap-cms@^3.1.2/dist/decap-cms.js"></script>
+      btn.addEventListener('mouseup', () => {
+        btn.style.transform = '';
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  </script>
 </body>
 </html>
