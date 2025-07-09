@@ -3,22 +3,26 @@ import '../../styles/global.css';
 import Layout from '../../layouts/Layout.astro';
 import EventCard from '../../components/EventCard.astro';
 
+// export const prerender = false;
+// export async function getStaticPaths() {
+//     const categories = ['all', 'information', 'video', 'music', 'interview'];
+//     const pages = [1, 2, 3, 4];
+//     return categories.flatMap(category =>
+//         pages.map(page => ({
+//             params: { category, page: String(page) }
+//         }))
+//     )
+// }
+
 export const prerender = false;
-
-export async function getStaticPaths() {
-    const categories = ['all', 'information', 'video', 'music', 'interview'];
-    const pages = [1, 2, 3, 4];
-
-    return categories.flatMap(category =>
-        pages.map(page => ({
-            params: { category, page: String(page) }
-        }))
-    )
-}
+export const config = {
+  runtime: 'edge',
+  revalidate: 3600 // ISR regeneration
+};
 
 // Get news sorted by date
 const allNews = (await Astro.glob('../../content/news/*.md'))
-  .sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+  .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime());
 
 const categories = [
   { label: 'Wszystkie', value: 'all' },
